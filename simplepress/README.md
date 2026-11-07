@@ -12,9 +12,9 @@ WordPress-inspired administration theme and secure admin toolkit for GetSimple C
 
 ## Documentation
 
-- English: [README.md](../README.md)
-- Polish: [README.pl.md](../README.pl.md)
-- Changelog: [CHANGELOG.md](../CHANGELOG.md)
+- English: [README.md](https://github.com/multicolor-rgb/SimplePress-for-GetSimple-CMS/blob/main/README.md)
+- Polish: [README.pl.md](https://github.com/multicolor-rgb/SimplePress-for-GetSimple-CMS/blob/main/README.pl.md)
+- Changelog: [CHANGELOG.md](https://github.com/multicolor-rgb/SimplePress-for-GetSimple-CMS/blob/main/CHANGELOG.md)
 
 ## Compatibility
 
@@ -24,4 +24,4 @@ WordPress-inspired administration theme and secure admin toolkit for GetSimple C
 
 ## License
 
-GPL-3.0. See [LICENSE](../LICENSE).
+GPL-3.0. See [LICENSE](https://github.com/multicolor-rgb/SimplePress-for-GetSimple-CMS/blob/main/LICENSE).
