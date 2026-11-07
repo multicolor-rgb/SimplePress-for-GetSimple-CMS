@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="spLogoTitle">
+  <title id="spLogoTitle">SimplePress</title>
+  <rect width="256" height="256" rx="56" fill="#151d26"/>
+  <rect x="14" y="14" width="228" height="228" rx="44" fill="none" stroke="#ffffff" stroke-opacity=".09" stroke-width="3"/>
+  <path d="M118 88C118 70 54 70 54 100C54 124 112 120 112 148C112 178 52 178 52 160"
+        fill="none" stroke="#f3eee4" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M146 70V190M146 70H170C200 70 200 132 170 132H146"
+        fill="none" stroke="#f3eee4" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="204" cy="190" r="7" fill="#72aee6"/>
+</svg>
