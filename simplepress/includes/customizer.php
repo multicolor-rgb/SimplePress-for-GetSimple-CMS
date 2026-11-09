@@ -166,15 +166,15 @@ if (!function_exists('sp_customizer_ajax')) {
             return;
         }
         if (!sp_customizer_can_use()) {
-            sp_json(['status' => 'error', 'message' => 'Administrator role required'], 403);
+            sp_json(['status' => 'error', 'message' => wp_i18n('ERROR_ADMIN', 'Administrator role required.')], 403);
         }
         if (!sp_verify_nonce('customizer', $_POST['sp_nonce'] ?? ($_GET['sp_nonce'] ?? ''))) {
-            sp_json(['status' => 'error', 'message' => 'Invalid security token'], 403);
+            sp_json(['status' => 'error', 'message' => wp_i18n('ERROR_SECURITY', 'Security validation failed.')], 403);
         }
         $action = preg_replace('/[^a-z0-9_]/i', '', (string) $_GET['sp_customizer_ajax']);
         $theme = function_exists('sp_active_theme') ? sp_active_theme() : false;
         if (!$theme) {
-            sp_json(['status' => 'error', 'message' => 'No active theme'], 400);
+            sp_json(['status' => 'error', 'message' => wp_i18n('CUSTOMIZER_NO_ACTIVE_THEME', 'No active theme')], 400);
         }
 
         if ($action === 'load') {
@@ -214,7 +214,7 @@ if (!function_exists('sp_customizer_ajax')) {
 
         if ($action === 'media_list') {
             if (!function_exists('sp_media_library_files')) {
-                sp_json(['status' => 'error', 'message' => 'Media library unavailable'], 500);
+                sp_json(['status' => 'error', 'message' => wp_i18n('CUSTOMIZER_MEDIA_UNAVAILABLE', 'Media library unavailable')], 500);
             }
             $kind = (string) ($_POST['kind'] ?? ($_GET['kind'] ?? 'all'));
             sp_json(['status' => 'success', 'files' => sp_media_library_files($kind)]);
@@ -222,10 +222,10 @@ if (!function_exists('sp_customizer_ajax')) {
 
         if ($action === 'media_upload') {
             if (!function_exists('sp_media_library_upload')) {
-                sp_json(['status' => 'error', 'message' => 'Media library unavailable'], 500);
+                sp_json(['status' => 'error', 'message' => wp_i18n('CUSTOMIZER_MEDIA_UNAVAILABLE', 'Media library unavailable')], 500);
             }
             if (!isset($_FILES['file'])) {
-                sp_json(['status' => 'error', 'message' => 'Brak pliku'], 400);
+                sp_json(['status' => 'error', 'message' => wp_i18n('CUSTOMIZER_NO_FILE', 'No file')], 400);
             }
             $kind = (string) ($_POST['kind'] ?? 'all');
             $result = sp_media_library_upload($_FILES['file'], $kind);
@@ -243,14 +243,14 @@ if (!function_exists('sp_customizer_ajax')) {
         if ($action === 'save') {
             $values = json_decode((string) ($_POST['values'] ?? '{}'), true);
             if (!is_array($values)) {
-                sp_json(['status' => 'error', 'message' => 'Invalid values'], 400);
+                sp_json(['status' => 'error', 'message' => wp_i18n('CUSTOMIZER_INVALID_VALUES', 'Invalid values')], 400);
             }
             sp_theme_settings_save_values($values, $theme);
             sp_theme_preview_clear($theme);
-            sp_json(['status' => 'success', 'message' => 'Settings saved']);
+            sp_json(['status' => 'success', 'message' => wp_i18n('CUSTOMIZER_SETTINGS_SAVED', 'Settings saved')]);
         }
 
-        sp_json(['status' => 'error', 'message' => 'Unknown action'], 400);
+        sp_json(['status' => 'error', 'message' => wp_i18n('CUSTOMIZER_UNKNOWN_ACTION', 'Unknown action')], 400);
     }
     add_action('common', 'sp_customizer_ajax');
 }
@@ -269,42 +269,43 @@ if (!function_exists('sp_customizer_render')) {
         $dashiconsCss = SP_PATH . 'css/dashicons.css';
         echo '<link rel="stylesheet" href="' . sp_e(sp_plugin_url('css/dashicons.css?v=' . (file_exists($dashiconsCss) ? filemtime($dashiconsCss) : SP_VERSION))) . '" media="all">' . PHP_EOL;
         $labels = [
-            'title' => wp_i18n('CUSTOMIZER_TITLE', 'Dostosuj'),
-            'publish' => wp_i18n('CUSTOMIZER_PUBLISH', 'Opublikuj'),
-            'publishing' => wp_i18n('CUSTOMIZER_PUBLISHING', 'Publikowanie...'),
-            'published' => wp_i18n('CUSTOMIZER_PUBLISHED', 'Opublikowano.'),
-            'saving' => wp_i18n('CUSTOMIZER_SAVING', 'Zapisywanie podglądu...'),
-            'close' => wp_i18n('CUSTOMIZER_CLOSE', 'Zamknij'),
+            'title' => wp_i18n('CUSTOMIZER_TITLE', 'Customize'),
+            'publish' => wp_i18n('CUSTOMIZER_PUBLISH', 'Publish'),
+            'publishing' => wp_i18n('CUSTOMIZER_PUBLISHING', 'Publishing...'),
+            'published' => wp_i18n('CUSTOMIZER_PUBLISHED', 'Published.'),
+            'saving' => wp_i18n('CUSTOMIZER_SAVING', 'Saving preview...'),
+            'close' => wp_i18n('CUSTOMIZER_CLOSE', 'Close'),
             'desktop' => wp_i18n('CUSTOMIZER_DESKTOP', 'Desktop'),
             'tablet' => wp_i18n('CUSTOMIZER_TABLET', 'Tablet'),
             'mobile' => wp_i18n('CUSTOMIZER_MOBILE', 'Mobile'),
-            'empty' => wp_i18n('CUSTOMIZER_EMPTY', 'Ten motyw nie ma zdefiniowanych ustawień.'),
-            'error' => wp_i18n('CUSTOMIZER_ERROR', 'Nie udało się zapisać.'),
-            'unsaved' => wp_i18n('CUSTOMIZER_UNSAVED', 'Masz niezapisane zmiany. Zamknąć customizer?'),
-            'reset' => wp_i18n('CUSTOMIZER_RESET', 'Przywróć domyślne'),
-            'search' => wp_i18n('CUSTOMIZER_SEARCH', 'Szukaj ustawień...'),
-            'choose' => wp_i18n('CUSTOMIZER_CHOOSE', 'Wybierz plik'),
-            'remove' => wp_i18n('CUSTOMIZER_REMOVE', 'Usuń'),
-            'clear' => wp_i18n('CUSTOMIZER_CLEAR', 'Wyczyść'),
-            'upload' => wp_i18n('CUSTOMIZER_UPLOAD', 'Wgraj plik'),
-            'library' => wp_i18n('CUSTOMIZER_LIBRARY', 'Biblioteka mediów'),
-            'insert' => wp_i18n('CUSTOMIZER_INSERT', 'Wstaw'),
-            'cancel' => wp_i18n('CUSTOMIZER_CANCEL', 'Anuluj'),
-            'uploading' => wp_i18n('CUSTOMIZER_UPLOADING', 'Wgrywanie...'),
-            'loading' => wp_i18n('FE_LOADING', 'Wczytywanie...'),
-            'upload_hint' => wp_i18n('CUSTOMIZER_UPLOAD_HINT', 'Upuść plik tutaj lub kliknij, aby wybrać z dysku.'),
-            'no_media' => wp_i18n('CUSTOMIZER_NO_MEDIA', 'Brak plików w bibliotece.'),
-            'media_title' => wp_i18n('CUSTOMIZER_MEDIA_TITLE', 'Wybierz lub wgraj medium'),
-            'media_error' => wp_i18n('CUSTOMIZER_MEDIA_ERROR', 'Nie udało się wczytać biblioteki.'),
-            'custom_url' => wp_i18n('CUSTOMIZER_CUSTOM_URL', 'Własny URL…'),
-            'pages_group' => wp_i18n('CUSTOMIZER_PAGES_GROUP', 'Strony'),
-            'menu_group' => wp_i18n('CUSTOMIZER_MENU_GROUP', 'Linki menu'),
-            'gallery_empty' => wp_i18n('CUSTOMIZER_GALLERY_EMPTY', 'Brak obrazów. Dodaj pierwszy.'),
-            'add_images' => wp_i18n('CUSTOMIZER_ADD_IMAGES', 'Dodaj obrazy'),
-            'choose_icon' => wp_i18n('CUSTOMIZER_CHOOSE_ICON', 'Wybierz ikonę'),
-            'search_icons' => wp_i18n('CUSTOMIZER_SEARCH_ICONS', 'Szukaj ikony...'),
-            'no_results' => wp_i18n('CUSTOMIZER_NO_RESULTS', 'Brak wyników.'),
-            'link_empty' => wp_i18n('CUSTOMIZER_LINK_EMPTY', '— brak —'),
+            'empty' => wp_i18n('CUSTOMIZER_EMPTY', 'This theme has no settings.'),
+            'error' => wp_i18n('CUSTOMIZER_ERROR', 'Could not save.'),
+            'unsaved' => wp_i18n('CUSTOMIZER_UNSAVED', 'You have unsaved changes. Close the customizer?'),
+            'reset' => wp_i18n('CUSTOMIZER_RESET', 'Restore defaults'),
+            'search' => wp_i18n('CUSTOMIZER_SEARCH', 'Search settings...'),
+            'choose' => wp_i18n('CUSTOMIZER_CHOOSE', 'Choose file'),
+            'file_url' => wp_i18n('CUSTOMIZER_FILE_URL', 'File URL'),
+            'remove' => wp_i18n('CUSTOMIZER_REMOVE', 'Remove'),
+            'clear' => wp_i18n('CUSTOMIZER_CLEAR', 'Clear'),
+            'upload' => wp_i18n('CUSTOMIZER_UPLOAD', 'Upload file'),
+            'library' => wp_i18n('CUSTOMIZER_LIBRARY', 'Media library'),
+            'insert' => wp_i18n('CUSTOMIZER_INSERT', 'Insert'),
+            'cancel' => wp_i18n('CUSTOMIZER_CANCEL', 'Cancel'),
+            'uploading' => wp_i18n('CUSTOMIZER_UPLOADING', 'Uploading...'),
+            'loading' => wp_i18n('FE_LOADING', 'Loading...'),
+            'upload_hint' => wp_i18n('CUSTOMIZER_UPLOAD_HINT', 'Drop a file here or click to choose from disk.'),
+            'no_media' => wp_i18n('CUSTOMIZER_NO_MEDIA', 'No files in the library.'),
+            'media_title' => wp_i18n('CUSTOMIZER_MEDIA_TITLE', 'Choose or upload media'),
+            'media_error' => wp_i18n('CUSTOMIZER_MEDIA_ERROR', 'Could not load the library.'),
+            'custom_url' => wp_i18n('CUSTOMIZER_CUSTOM_URL', 'Custom URL…'),
+            'pages_group' => wp_i18n('CUSTOMIZER_PAGES_GROUP', 'Pages'),
+            'menu_group' => wp_i18n('CUSTOMIZER_MENU_GROUP', 'Menu links'),
+            'gallery_empty' => wp_i18n('CUSTOMIZER_GALLERY_EMPTY', 'No images yet. Add your first one.'),
+            'add_images' => wp_i18n('CUSTOMIZER_ADD_IMAGES', 'Add images'),
+            'choose_icon' => wp_i18n('CUSTOMIZER_CHOOSE_ICON', 'Choose icon'),
+            'search_icons' => wp_i18n('CUSTOMIZER_SEARCH_ICONS', 'Search icons...'),
+            'no_results' => wp_i18n('CUSTOMIZER_NO_RESULTS', 'No results.'),
+            'link_empty' => wp_i18n('CUSTOMIZER_LINK_EMPTY', '— none —'),
         ];
         $config = [
             'endpoint' => rtrim((string) $SITEURL, '/') . '/?sp_customizer_ajax=',

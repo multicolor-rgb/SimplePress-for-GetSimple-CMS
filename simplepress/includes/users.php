@@ -210,22 +210,22 @@ function wp_simple_users_view() {
             <?php if (function_exists('wp_simple_render_subtabs')) { wp_simple_render_subtabs(); } ?>
 
             <?php if (isset($_GET['added'])): ?>
-                <div class="updated"><p>Nowy użytkownik został pomyślnie utworzony.</p></div>
+                <div class="updated"><p><?php echo sp_e(wp_i18n('USERS_CREATED', 'New user created successfully.')); ?></p></div>
             <?php elseif (isset($_GET['updated'])): ?>
-                <div class="updated"><p>Dane użytkownika zostały zaktualizowane.</p></div>
+                <div class="updated"><p><?php echo sp_e(wp_i18n('USERS_UPDATED', 'User data updated.')); ?></p></div>
             <?php elseif (isset($_GET['deleted'])): ?>
-                <div class="updated"><p>Użytkownik został pomyślnie usunięty z systemu.</p></div>
+                <div class="updated"><p><?php echo sp_e(wp_i18n('USERS_DELETED', 'User removed successfully.')); ?></p></div>
             <?php elseif (isset($_GET['error'])): ?>
                 <div class="error"><p>
                     <?php 
                         switch ($_GET['error']) {
-                            case 'self_delete': echo 'Nie możesz usunąć konta, na którym jesteś aktualnie zalogowany!'; break;
-                            case 'user_exists': echo 'Użytkownik o takim loginie już istnieje!'; break;
-                            case 'empty_fields': echo 'Login oraz adres e-mail są wymagane.'; break;
-                            case 'empty_pass': echo 'Hasło musi mieć co najmniej 8 znaków.'; break;
-                            case 'email_invalid': echo 'Podaj poprawny adres e-mail.'; break;
-                            case 'last_user': echo 'Nie można usunąć ostatniego użytkownika.'; break;
-                            default: echo 'Wystąpił błąd podczas operacji.'; break;
+                            case 'self_delete': echo sp_e(wp_i18n('USERS_ERR_SELF_DELETE', 'You cannot delete the account you are currently logged in with!')); break;
+                            case 'user_exists': echo sp_e(wp_i18n('USERS_ERR_EXISTS', 'A user with this login already exists!')); break;
+                            case 'empty_fields': echo sp_e(wp_i18n('USERS_ERR_EMPTY', 'Login and email are required.')); break;
+                            case 'empty_pass': echo sp_e(wp_i18n('USERS_ERR_PASSWORD', 'Password must be at least 8 characters long.')); break;
+                            case 'email_invalid': echo sp_e(wp_i18n('USERS_ERR_EMAIL', 'Enter a valid email address.')); break;
+                            case 'last_user': echo sp_e(wp_i18n('USERS_ERR_LAST', 'You cannot delete the last user.')); break;
+                            default: echo sp_e(wp_i18n('USERS_ERR_GENERIC', 'An error occurred during the operation.')); break;
                         }
                     ?>
                 </p></div>
@@ -248,8 +248,8 @@ function wp_simple_users_view() {
             ?>
                 <!-- FORMULARZ DODAWANIA / EDYCJI -->
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
-                    <h2 style="margin:0 !important;"><?php echo $is_edit ? 'Edytuj profil: ' . htmlspecialchars($user_data['login']) : 'Dodaj nowego użytkownika'; ?></h2>
-                    <a href="load.php?id=simplepress&sub=users" class="button">Powrót do listy</a>
+                    <h2 style="margin:0 !important;"><?php echo $is_edit ? sp_e(wp_i18n('USERS_EDIT_TITLE', 'Edit profile:')) . ' ' . htmlspecialchars($user_data['login']) : sp_e(wp_i18n('USERS_ADD_TITLE', 'Add new user')); ?></h2>
+                    <a href="load.php?id=simplepress&sub=users" class="button"><?php echo sp_e(wp_i18n('USERS_BACK', 'Back to list')); ?></a>
                 </div>
 
                 <form method="post" action="load.php?id=simplepress&amp;sub=users">
@@ -259,46 +259,46 @@ function wp_simple_users_view() {
                     <table class="form-table" style="max-width: 850px; background: var(--wp-card-bg); border: 1px solid var(--wp-border); padding: 20px; border-radius: 3px; box-shadow:0 1px 1px rgba(0,0,0,0.04);">
                         <tbody>
                             <tr>
-                                <th scope="row" style="width: 220px; padding: 15px 10px; font-weight: 600;">Nazwa użytkownika (login)</th>
+                                <th scope="row" style="width: 220px; padding: 15px 10px; font-weight: 600;"><?php echo sp_e(wp_i18n('USERS_LOGIN', 'Username (login)')); ?></th>
                                 <td style="padding: 15px 10px;">
                                     <input type="text" name="user_login" value="<?php echo htmlspecialchars($user_data['login']); ?>" <?php echo $is_edit ? 'readonly style="background:var(--wp-content-bg); cursor:not-allowed;"' : 'required'; ?> class="regular-text" style="width: 100%; max-width: 350px; padding: 6px 10px;">
-                                    <?php if ($is_edit): ?><p class="description" style="font-size:12px; color:var(--wp-text-muted); margin-top:4px;">Loginu w GetSimple CMS nie można edytować.</p><?php endif; ?>
+                                    <?php if ($is_edit): ?><p class="description" style="font-size:12px; color:var(--wp-text-muted); margin-top:4px;"><?php echo sp_e(wp_i18n('USERS_LOGIN_READONLY', 'The GetSimple CMS login cannot be edited.')); ?></p><?php endif; ?>
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row" style="padding: 15px 10px; font-weight: 600;">Adres e-mail</th>
+                                <th scope="row" style="padding: 15px 10px; font-weight: 600;"><?php echo sp_e(wp_i18n('USERS_EMAIL', 'Email')); ?></th>
                                 <td style="padding: 15px 10px;">
                                     <input type="email" name="user_email" value="<?php echo htmlspecialchars($user_data['email']); ?>" required class="regular-text" style="width: 100%; max-width: 350px; padding: 6px 10px;">
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row" style="padding: 15px 10px; font-weight: 600;">Nazwa wyświetlana</th>
+                                <th scope="row" style="padding: 15px 10px; font-weight: 600;"><?php echo sp_e(wp_i18n('USERS_DISPLAY_NAME', 'Display name')); ?></th>
                                 <td style="padding: 15px 10px;"><input type="text" name="user_display_name" value="<?php echo htmlspecialchars($user_data['name'] ?? ''); ?>" style="width:100%;max-width:350px;padding:6px 10px;"></td>
                             </tr>
                             <tr>
-                                <th scope="row" style="padding: 15px 10px; font-weight: 600;">Język</th>
+                                <th scope="row" style="padding: 15px 10px; font-weight: 600;"><?php echo sp_e(wp_i18n('USERS_LANGUAGE', 'Language')); ?></th>
                                 <td style="padding: 15px 10px;"><select name="user_lang"><?php foreach (glob(GSLANGPATH . '*.php') as $lf): $lc = basename($lf, '.php'); ?><option value="<?php echo sp_e($lc); ?>" <?php echo (($user_data['lang'] ?? 'en_US') === $lc ? 'selected' : ''); ?>><?php echo sp_e($lc); ?></option><?php endforeach; ?></select></td>
                             </tr>
                             <tr>
-                                <th scope="row" style="padding: 15px 10px; font-weight: 600;">Hasło</th>
+                                <th scope="row" style="padding: 15px 10px; font-weight: 600;"><?php echo sp_e(wp_i18n('USERS_PASSWORD', 'Password')); ?></th>
                                 <td style="padding: 15px 10px;">
                                     <div style="display: flex; gap: 8px; max-width: 450px;">
-                                        <input type="password" name="user_pass" id="user_pass" autocomplete="new-password" placeholder="<?php echo $is_edit ? 'Pozostaw puste, aby nie zmieniać' : 'Wpisz silne hasło'; ?>" <?php echo $is_edit ? '' : 'required'; ?> class="regular-text" style="flex:1; padding: 6px 10px;">
-                                        <button type="button" class="button" id="btn-gen-pass">Generuj hasło</button>
+                                        <input type="password" name="user_pass" id="user_pass" autocomplete="new-password" placeholder="<?php echo $is_edit ? sp_e(wp_i18n('USERS_PASSWORD_KEEP', 'Leave blank to keep unchanged')) : sp_e(wp_i18n('USERS_PASSWORD_ENTER', 'Enter a strong password')); ?>" <?php echo $is_edit ? '' : 'required'; ?> class="regular-text" style="flex:1; padding: 6px 10px;">
+                                        <button type="button" class="button" id="btn-gen-pass"><?php echo sp_e(wp_i18n('USERS_GENERATE_PASSWORD', 'Generate password')); ?></button>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row" style="padding: 15px 10px; font-weight: 600;">Rola</th>
+                                <th scope="row" style="padding: 15px 10px; font-weight: 600;"><?php echo sp_e(wp_i18n('ROLE', 'Role')); ?></th>
                                 <td style="padding: 15px 10px;">
                                     <select name="user_role" style="padding: 6px 10px; border-radius: 4px;">
-                                        <option value="administrator" <?php echo ($user_data['role'] === 'administrator') ? 'selected' : ''; ?>>Administrator (Pełny dostęp)</option>
-                                        <option value="editor" <?php echo ($user_data['role'] === 'editor') ? 'selected' : ''; ?>>Redaktor (Zarządzanie stronami)</option>
+                                        <option value="administrator" <?php echo ($user_data['role'] === 'administrator') ? 'selected' : ''; ?>><?php echo sp_e(wp_i18n('USERS_ROLE_ADMIN', 'Administrator (full access)')); ?></option>
+                                        <option value="editor" <?php echo ($user_data['role'] === 'editor') ? 'selected' : ''; ?>><?php echo sp_e(wp_i18n('USERS_ROLE_EDITOR', 'Editor (page management)')); ?></option>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
-                                <th scope="row" style="padding: 15px 10px; font-weight: 600;">Biogram (Bio)</th>
+                                <th scope="row" style="padding: 15px 10px; font-weight: 600;"><?php echo sp_e(wp_i18n('USERS_BIO', 'Bio')); ?></th>
                                 <td style="padding: 15px 10px;">
                                     <textarea name="user_bio" rows="4" style="width: 100%; max-width: 450px; padding: 8px; border-radius: 4px; border: 1px solid var(--wp-input-border);"><?php echo htmlspecialchars($user_data['bio']); ?></textarea>
                                 </td>
@@ -307,7 +307,7 @@ function wp_simple_users_view() {
                     </table>
 
                     <p class="submit" style="margin-top: 20px;">
-                        <input type="submit" name="wp_save_user" class="button button-primary" value="<?php echo $is_edit ? 'Zaktualizuj profil' : 'Utwórz użytkownika'; ?>">
+                        <input type="submit" name="wp_save_user" class="button button-primary" value="<?php echo $is_edit ? sp_e(wp_i18n('USERS_UPDATE', 'Update profile')) : sp_e(wp_i18n('USERS_CREATE', 'Create user')); ?>">
                     </p>
                 </form>
 
@@ -326,11 +326,11 @@ function wp_simple_users_view() {
                 <!-- POPRAWIONA TABELA LISTY UŻYTKOWNIKÓW -->
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
                     <div style="display:flex; align-items:center; gap: 12px;">
-                        <h2 style="margin:0 !important;">Użytkownicy</h2>
-                        <a href="load.php?id=simplepress&sub=users&action=new" class="button button-primary">Dodaj nowego</a>
+                        <h2 style="margin:0 !important;"><?php echo sp_e(wp_i18n('USERS_LIST', 'Users')); ?></h2>
+                        <a href="load.php?id=simplepress&sub=users&action=new" class="button button-primary"><?php echo sp_e(wp_i18n('USERS_ADD_NEW', 'Add new')); ?></a>
                     </div>
                     <div>
-                        <input type="search" id="user-search-input" placeholder="Szukaj użytkownika..." style="width: 220px; padding: 6px 10px; border: 1px solid var(--wp-input-border); border-radius: 4px; font-size: 13px;">
+                        <input type="search" id="user-search-input" placeholder="<?php echo sp_e(wp_i18n('USERS_SEARCH', 'Search user...')); ?>" style="width: 220px; padding: 6px 10px; border: 1px solid var(--wp-input-border); border-radius: 4px; font-size: 13px;">
                     </div>
                 </div>
 
@@ -338,18 +338,18 @@ function wp_simple_users_view() {
                     <table class="highlight" id="users-table" style="width: 100%; margin: 0; border: none; border-collapse: collapse;">
                         <thead>
                             <tr style="background: var(--wp-surface-alt); border-bottom: 1px solid var(--wp-border); text-align: left;">
-                                <th style="width: 32%; padding: 12px 16px;">Użytkownik</th>
-                                <th style="width: 28%; padding: 12px 16px;">Adres e-mail</th>
-                                <th style="width: 15%; padding: 12px 16px;">Rola</th>
-                                <th style="width: 10%; padding: 12px 16px; text-align: center;">Strony</th>
-                                <th style="width: 15%; padding: 12px 16px; text-align: right;">Akcje</th>
+                                <th style="width: 32%; padding: 12px 16px;"><?php echo sp_e(wp_i18n('USERS_USER', 'User')); ?></th>
+                                <th style="width: 28%; padding: 12px 16px;"><?php echo sp_e(wp_i18n('USERS_EMAIL_COL', 'Email')); ?></th>
+                                <th style="width: 15%; padding: 12px 16px;"><?php echo sp_e(wp_i18n('USERS_ROLE_COL', 'Role')); ?></th>
+                                <th style="width: 10%; padding: 12px 16px; text-align: center;"><?php echo sp_e(wp_i18n('USERS_PAGES', 'Pages')); ?></th>
+                                <th style="width: 15%; padding: 12px 16px; text-align: right;"><?php echo sp_e(wp_i18n('USERS_ACTIONS', 'Actions')); ?></th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             $user_files = glob(GSUSERSPATH . '*.xml');
                             if (empty($user_files)): ?>
-                                <tr><td colspan="5" style="text-align:center; padding: 30px; color:var(--wp-text-muted);">Brak zarejestrowanych kont użytkowników.</td></tr>
+                                <tr><td colspan="5" style="text-align:center; padding: 30px; color:var(--wp-text-muted);"><?php echo sp_e(wp_i18n('USERS_NONE', 'No registered user accounts.')); ?></td></tr>
                             <?php else:
                                 foreach ($user_files as $ufile):
                                     $uname = basename($ufile, '.xml');
@@ -367,7 +367,7 @@ function wp_simple_users_view() {
                                             <div>
                                                 <strong style="font-size: 14px; color: var(--wp-text-strong);"><?php echo htmlspecialchars($uname); ?></strong>
                                                 <?php if ($is_me): ?>
-                                                    <span style="background: #e7f5ea; color: #1e4620; font-size: 11px; padding: 2px 8px; border-radius: 12px; margin-left: 6px; font-weight: 600; display: inline-block;">To Ty</span>
+                                                    <span style="background: #e7f5ea; color: #1e4620; font-size: 11px; padding: 2px 8px; border-radius: 12px; margin-left: 6px; font-weight: 600; display: inline-block;"><?php echo sp_e(wp_i18n('USERS_YOU', 'You')); ?></span>
                                                 <?php endif; ?>
                                             </div>
                                         </div>
@@ -380,10 +380,10 @@ function wp_simple_users_view() {
                                     <td style="padding: 12px 16px;">
                                         <?php if ($role === 'administrator'): ?>
                                             <span style="display: inline-flex; align-items: center; gap: 4px; font-weight: 500; color: var(--wp-text-strong);">
-                                                <span class="dashicons dashicons-shield" style="font-size: 16px; color: var(--wp-blue);"></span> Administrator
+                                                <span class="dashicons dashicons-shield" style="font-size: 16px; color: var(--wp-blue);"></span> <?php echo sp_e(wp_i18n('ROLE_ADMIN', 'Administrator')); ?>
                                             </span>
                                         <?php else: ?>
-                                            <span style="color: var(--wp-text-muted);">Redaktor</span>
+                                            <span style="color: var(--wp-text-muted);"><?php echo sp_e(wp_i18n('ROLE_EDITOR', 'Editor')); ?></span>
                                         <?php endif; ?>
                                     </td>
                                     <td style="padding: 12px 16px; text-align: center;">
@@ -392,13 +392,13 @@ function wp_simple_users_view() {
                                         </span>
                                     </td>
                                     <td style="padding: 12px 16px; text-align: right; white-space: nowrap;">
-                                        <a href="load.php?id=simplepress&sub=users&action=edit&user=<?php echo urlencode($uname); ?>" class="button" style="margin-right: 4px;">Edytuj</a>
+                                        <a href="load.php?id=simplepress&sub=users&action=edit&user=<?php echo urlencode($uname); ?>" class="button" style="margin-right: 4px;"><?php echo sp_e(wp_i18n('EDIT', 'Edit')); ?></a>
                                         <?php if (!$is_me): ?>
-                                            <form method="post" action="load.php?id=simplepress&amp;sub=users" style="display:inline" onsubmit="return confirm('Czy na pewno chcesz bezpowrotnie usunąć użytkownika &quot;<?php echo sp_e($uname); ?>&quot;?');">
+                                            <form method="post" action="load.php?id=simplepress&amp;sub=users" style="display:inline" onsubmit="return confirm(<?php echo sp_e(sp_js(sprintf(wp_i18n('USERS_DELETE_CONFIRM', 'Are you sure you want to permanently delete user "%s"?'), $uname))); ?>);">
                                                 <?php sp_nonce_field('delete_user'); ?>
                                                 <input type="hidden" name="wp_delete_user" value="1">
                                                 <input type="hidden" name="user" value="<?php echo sp_e($uname); ?>">
-                                                <button type="submit" class="button wp-btn-danger">Usuń</button>
+                                                <button type="submit" class="button wp-btn-danger"><?php echo sp_e(wp_i18n('USERS_DELETE', 'Delete')); ?></button>
                                             </form>
                                         <?php endif; ?>
                                     </td>

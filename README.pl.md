@@ -52,7 +52,7 @@ Najważniejsze funkcje:
 - górny pasek, zwijany ciemny sidebar, podmenu i menu mobilne w stylu WordPressa,
 - schematy Classic, Modern i Dark z możliwością nadpisania przez użytkownika,
 - postboxy, zakładki, tabele, formularze, powiadomienia i ekran logowania,
-- nowe logo SimplePress „Monogram Seal”,
+- nowe logo SimplePress „Aurora Monogram”,
 - kokpit ze statystykami, szybkim szkicem i kondycją serwera,
 - CKEditor (rdzeń GetSimple) albo lokalny TinyMCE 6,
 - biblioteka mediów z drag & drop, miniaturami i lokalnym Cropper.js,
@@ -430,8 +430,12 @@ SimplePress zawiera:
 - polski (`pl_PL`),
 - hiszpański (`es_ES`).
 
-Język jest zgodny z ustawieniem `$LANG` w GetSimple. Własne teksty można dodać w
-plikach w `simplepress/lang/`.
+Wszystkie teksty panelu, etykiety JavaScript, komunikaty walidacji i okna
+potwierdzeń można tłumaczyć. Język jest zgodny z ustawieniem `$LANG` w
+GetSimple. Aby dodać kolejny język, skopiuj
+`simplepress/lang/en_US.php` do `simplepress/lang/xx_XX.php`, przetłumacz
+wartości i zachowaj te same klucze. Loader automatycznie użyje angielskiego
+jako fallbacku dla brakujących kluczy.
 
 ## Aktualizacja
 

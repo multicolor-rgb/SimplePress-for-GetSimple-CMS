@@ -26,7 +26,7 @@ if (!function_exists('sp_plugin_search_assets')) {
                 var input = document.createElement("input");
                 input.type = "search";
                 input.id = "sp-plugin-search";
-                input.placeholder = "Szukaj wtyczki...";
+                input.placeholder = <?php echo sp_js(wp_i18n('REPO_SEARCH', 'Search plugins...')); ?>;
                 input.style.cssText = "width:100%;max-width:360px;padding:5px 9px;border: 1px solid var(--wp-input-border);border-radius:4px";
                 wrap.appendChild(input);
                 table.parentNode.insertBefore(wrap, table);

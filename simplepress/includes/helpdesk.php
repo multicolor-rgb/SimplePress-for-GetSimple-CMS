@@ -16,7 +16,7 @@ if (!function_exists('sp_helpdesk_nav')) {
             return;
         }
         $current = (($_GET['id'] ?? '') === 'simplepress' && ($_GET['sub'] ?? '') === 'helpdesk') ? 'current' : '';
-        echo '<li class="wp-menu-helpdesk wp-custom-nav-item"><a href="load.php?id=simplepress&amp;sub=helpdesk" class="' . $current . '"><span class="dashicons dashicons-editor-help"></span><span class="wp-nav-label">Pomoc</span></a></li>';
+        echo '<li class="wp-menu-helpdesk wp-custom-nav-item"><a href="load.php?id=simplepress&amp;sub=helpdesk" class="' . $current . '"><span class="dashicons dashicons-editor-help"></span><span class="wp-nav-label">' . sp_e(wp_i18n('TAB_HELP', 'Help')) . '</span></a></li>';
     }
 }
 add_action('nav-tab', 'sp_helpdesk_nav');
@@ -40,16 +40,16 @@ if (!function_exists('wp_simple_helpdesk_view')) {
         ?>
         <div class="wrap">
             <?php wp_simple_render_subtabs(); ?>
-            <h1><?php echo sp_e(wp_i18n('TAB_HELP', 'Pomoc')); ?></h1>
-            <?php if (isset($_GET['saved'])): ?><div class="notice notice-success"><p>Treść pomocy została zapisana.</p></div><?php endif; ?>
+            <h1><?php echo sp_e(wp_i18n('TAB_HELP', 'Help')); ?></h1>
+            <?php if (isset($_GET['saved'])): ?><div class="notice notice-success"><p><?php echo sp_e(wp_i18n('HELP_SAVED', 'Help content saved.')); ?></p></div><?php endif; ?>
             <?php if ($content !== ''): ?><div class="postbox"><div class="inside sp-help-content"><?php echo $content; ?></div></div><?php endif; ?>
             <?php if (sp_is_administrator()): ?>
             <form method="post" action="<?php echo sp_e(sp_admin_url('helpdesk')); ?>">
                 <?php sp_nonce_field('save_helpdesk'); ?>
                 <input type="hidden" name="sp_save_helpdesk" value="1">
-                <p><label><input type="checkbox" name="enabled" value="1" <?php echo $enabled ? 'checked' : ''; ?>> Pokaż link „Pomoc” w nawigacji</label></p>
+                <p><label><input type="checkbox" name="enabled" value="1" <?php echo $enabled ? 'checked' : ''; ?>> <?php echo sp_e(wp_i18n('HELP_SHOW_LINK', 'Show "Help" link in navigation')); ?></label></p>
                 <textarea name="content" rows="16" class="large-text code"><?php echo sp_e($content); ?></textarea>
-                <p><button type="submit" class="button button-primary">Zapisz pomoc</button></p>
+                <p><button type="submit" class="button button-primary"><?php echo sp_e(wp_i18n('HELP_SAVE', 'Save help')); ?></button></p>
             </form>
             <?php endif; ?>
         </div>

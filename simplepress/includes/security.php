@@ -16,6 +16,13 @@ if (!function_exists('sp_e')) {
     }
 }
 
+if (!function_exists('sp_js')) {
+    function sp_js($value)
+    {
+        return json_encode((string) $value, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+    }
+}
+
 if (!function_exists('sp_nonce')) {
     function sp_nonce($action)
     {
@@ -57,7 +64,7 @@ if (!function_exists('sp_require_post')) {
     function sp_require_post($action)
     {
         if (strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST' || !sp_verify_nonce($action)) {
-            sp_die('CSRF validation failed. Please reload the page and try again.', 403);
+            sp_die(wp_i18n('ERROR_CSRF', 'CSRF validation failed. Please reload the page and try again.'), 403);
         }
     }
 }
@@ -66,7 +73,7 @@ if (!function_exists('sp_require_get_nonce')) {
     function sp_require_get_nonce($action)
     {
         if (!sp_verify_nonce($action)) {
-            sp_die('Security validation failed.', 403);
+            sp_die(wp_i18n('ERROR_SECURITY', 'Security validation failed.'), 403);
         }
     }
 }
@@ -138,9 +145,9 @@ if (!function_exists('sp_require_authenticated')) {
             return;
         }
         if ($json) {
-            sp_json(['status' => 'error', 'message' => 'Authentication required'], 403);
+            sp_json(['status' => 'error', 'message' => wp_i18n('ERROR_AUTH', 'Authentication required.')], 403);
         }
-        sp_die('Authentication required.', 403);
+        sp_die(wp_i18n('ERROR_AUTH', 'Authentication required.'), 403);
     }
 }
 
@@ -149,15 +156,15 @@ if (!function_exists('sp_require_admin')) {
     {
         if (!sp_is_authenticated()) {
             if ($json) {
-                sp_json(['status' => 'error', 'message' => 'Authentication required'], 403);
+                sp_json(['status' => 'error', 'message' => wp_i18n('ERROR_AUTH', 'Authentication required.')], 403);
             }
-            sp_die('Authentication required.', 403);
+            sp_die(wp_i18n('ERROR_AUTH', 'Authentication required.'), 403);
         }
         if (!sp_is_administrator()) {
             if ($json) {
-                sp_json(['status' => 'error', 'message' => 'Administrator role required'], 403);
+                sp_json(['status' => 'error', 'message' => wp_i18n('ERROR_ADMIN', 'Administrator role required.')], 403);
             }
-            sp_die('Administrator role required.', 403);
+            sp_die(wp_i18n('ERROR_ADMIN', 'Administrator role required.'), 403);
         }
     }
 }

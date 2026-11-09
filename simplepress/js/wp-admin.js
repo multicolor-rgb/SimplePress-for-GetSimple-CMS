@@ -186,12 +186,7 @@ document.addEventListener("DOMContentLoaded", function () {
       collapseBtn.id = "collapse-menu";
       collapseBtn.type = "button";
       
-      let collapseText = t.COLLAPSE_MENU || t.SIDEBAR_COLLAPSE;
-      if (!collapseText || collapseText === "SIDEBAR_COLLAPSE") {
-        collapseText = (document.documentElement.lang === "pl" || (navigator.language && navigator.language.startsWith("pl"))) 
-          ? "Zwiń menu" 
-          : "Collapse menu";
-      }
+      const collapseText = t.COLLAPSE_MENU || t.SIDEBAR_COLLAPSE || "Collapse menu";
 
       collapseBtn.innerHTML = `<span class="wp-nav-label">${collapseText}</span>`;
       nav.appendChild(collapseBtn);
@@ -235,7 +230,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const leftGroup = document.createElement("div");
     leftGroup.className = "header-left-group";
     leftGroup.innerHTML = `
-      <button type="button" id="wp-mobile-menu-toggle" aria-label="Menu">
+      <button type="button" id="wp-mobile-menu-toggle" aria-label="${t.MENU || "Menu"}">
         <span class="dashicons dashicons-menu-alt3"></span>
       </button>
       <a href="load.php?id=simplepress&amp;sub=dashboard" class="wp-logo-icon" title="SimplePress"><img src="${(window.SP_PLUGIN_URL || "plugins/simplepress/")}img/sp.svg" alt="SP" style="width:22px;height:22px;display:block;object-fit:contain"></a>
@@ -251,7 +246,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <span class="user-welcome-text">${t.WELCOME || "Howdy"}, <strong>${username}</strong></span>
         <span class="dashicons dashicons-admin-users"></span>
       </a>
-      <a href="${logoutUrl}" class="wp-logout-link" title="${t.TAB_LOGOUT || "Log Out"}">
+      <a href="${logoutUrl}" class="wp-logout-link" title="${t.LOGOUT || "Log Out"}">
         <span class="dashicons dashicons-migrate"></span>
       </a>
     `;

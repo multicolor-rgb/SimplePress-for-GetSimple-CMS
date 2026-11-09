@@ -345,57 +345,57 @@ if (!function_exists('wp_simple_appearance_view')) {
         ?>
         <div class="wrap">
             <?php wp_simple_render_subtabs(); ?>
-            <h1><?php echo sp_e(wp_i18n('TAB_APPEARANCE', 'Wygląd')); ?></h1>
-            <?php if (isset($_GET['saved'])): ?><div class="notice notice-success"><p>Ustawienia zostały zapisane.</p></div><?php endif; ?>
-            <?php if (isset($_GET['error'])): ?><div class="notice notice-error"><p>Nie udało się zapisać ustawień lub przesłać obrazu.</p></div><?php endif; ?>
+            <h1><?php echo sp_e(wp_i18n('TAB_APPEARANCE', 'Appearance')); ?></h1>
+            <?php if (isset($_GET['saved'])): ?><div class="notice notice-success"><p><?php echo sp_e(wp_i18n('BRANDING_SAVED', 'Settings saved.')); ?></p></div><?php endif; ?>
+            <?php if (isset($_GET['error'])): ?><div class="notice notice-error"><p><?php echo sp_e(wp_i18n('BRANDING_ERROR', 'Could not save settings or upload the image.')); ?></p></div><?php endif; ?>
 
-            <div class="postbox"><div class="postbox-header"><h2>Schemat kolorów</h2></div><div class="inside">
+            <div class="postbox"><div class="postbox-header"><h2><?php echo sp_e(wp_i18n('BRANDING_COLOR_SCHEME', 'Color scheme')); ?></h2></div><div class="inside">
                 <form method="post" action="<?php echo sp_e(sp_admin_url('appearance')); ?>">
                     <?php sp_nonce_field('save_appearance_theme'); ?>
                     <input type="hidden" name="sp_save_theme" value="1">
                     <?php foreach (['classic' => 'SimplePress Classic', 'modern' => 'SimplePress Modern', 'dark' => 'SimplePress Dark'] as $key => $label): ?>
                     <label style="display:block;margin:6px 0"><input type="radio" name="scheme" value="<?php echo sp_e($key); ?>" <?php echo $scheme === $key ? 'checked' : ''; ?>> <?php echo sp_e($label); ?></label>
                     <?php endforeach; ?>
-                    <p><label><input type="checkbox" name="grid_admin" value="1" <?php echo wp_simple_get_setting('grid_admin', '0') === '1' ? 'checked' : ''; ?>> Bootstrap grid w panelu</label></p>
-                    <p><label><input type="checkbox" name="grid_frontend" value="1" <?php echo wp_simple_get_setting('grid_frontend', '0') === '1' ? 'checked' : ''; ?>> Bootstrap grid na froncie</label></p>
-                    <p><button type="submit" class="button button-primary">Zapisz schemat</button></p>
+                    <p><label><input type="checkbox" name="grid_admin" value="1" <?php echo wp_simple_get_setting('grid_admin', '0') === '1' ? 'checked' : ''; ?>> <?php echo sp_e(wp_i18n('BRANDING_GRID_ADMIN', 'Bootstrap grid in the admin')); ?></label></p>
+                    <p><label><input type="checkbox" name="grid_frontend" value="1" <?php echo wp_simple_get_setting('grid_frontend', '0') === '1' ? 'checked' : ''; ?>> <?php echo sp_e(wp_i18n('BRANDING_GRID_FRONTEND', 'Bootstrap grid on the front end')); ?></label></p>
+                    <p><button type="submit" class="button button-primary"><?php echo sp_e(wp_i18n('BRANDING_SAVE_SCHEME', 'Save scheme')); ?></button></p>
                 </form>
             </div></div>
 
-            <div class="postbox"><div class="postbox-header"><h2>Branding</h2></div><div class="inside">
+            <div class="postbox"><div class="postbox-header"><h2><?php echo sp_e(wp_i18n('BRANDING', 'Branding')); ?></h2></div><div class="inside">
                 <form method="post" enctype="multipart/form-data" action="<?php echo sp_e(sp_admin_url('appearance')); ?>">
                     <?php sp_nonce_field('save_branding'); ?>
                     <input type="hidden" name="sp_save_branding" value="1">
-                    <p><label><input type="checkbox" name="branding_enabled" value="1" <?php echo $branding['enabled'] ? 'checked' : ''; ?>> Włącz branding</label></p>
-                    <p><label>Tekst stopki<br><input type="text" class="regular-text" name="footer_name" value="<?php echo sp_e($branding['footer_name']); ?>"></label></p>
-                    <p><label>Link stopki<br><input type="url" class="regular-text" name="footer_link" value="<?php echo sp_e($branding['footer_link']); ?>" placeholder="https://"></label></p>
-                    <p><label>Logo / ikona<br><input type="file" name="branding_icon" accept="image/png,image/jpeg,image/gif,image/webp"></label></p>
-                    <?php if ($iconUrl !== ''): ?><p><img src="<?php echo sp_e($iconUrl); ?>" alt="" style="max-height:80px;max-width:200px"><br><label><input type="checkbox" name="remove_icon" value="1"> usuń ikonę</label></p><?php endif; ?>
-                    <p><label><input type="checkbox" name="colors_enabled" value="1" <?php echo $branding['colors'] ? 'checked' : ''; ?>> Nadpisz kolory</label></p>
-                    <p><label>Akcent <input type="color" name="accent" value="<?php echo sp_e($branding['accent']); ?>"></label> <label>Tło <input type="color" name="bg" value="<?php echo sp_e($branding['bg']); ?>"></label></p>
+                    <p><label><input type="checkbox" name="branding_enabled" value="1" <?php echo $branding['enabled'] ? 'checked' : ''; ?>> <?php echo sp_e(wp_i18n('BRANDING_ENABLE', 'Enable branding')); ?></label></p>
+                    <p><label><?php echo sp_e(wp_i18n('BRANDING_FOOTER_TEXT', 'Footer text')); ?><br><input type="text" class="regular-text" name="footer_name" value="<?php echo sp_e($branding['footer_name']); ?>"></label></p>
+                    <p><label><?php echo sp_e(wp_i18n('BRANDING_FOOTER_LINK', 'Footer link')); ?><br><input type="url" class="regular-text" name="footer_link" value="<?php echo sp_e($branding['footer_link']); ?>" placeholder="https://"></label></p>
+                    <p><label><?php echo sp_e(wp_i18n('BRANDING_LOGO_ICON', 'Logo / icon')); ?><br><input type="file" name="branding_icon" accept="image/png,image/jpeg,image/gif,image/webp"></label></p>
+                    <?php if ($iconUrl !== ''): ?><p><img src="<?php echo sp_e($iconUrl); ?>" alt="" style="max-height:80px;max-width:200px"><br><label><input type="checkbox" name="remove_icon" value="1"> <?php echo sp_e(wp_i18n('BRANDING_REMOVE_ICON', 'remove icon')); ?></label></p><?php endif; ?>
+                    <p><label><input type="checkbox" name="colors_enabled" value="1" <?php echo $branding['colors'] ? 'checked' : ''; ?>> <?php echo sp_e(wp_i18n('BRANDING_OVERRIDE_COLORS', 'Override colors')); ?></label></p>
+                    <p><label><?php echo sp_e(wp_i18n('BRANDING_ACCENT', 'Accent')); ?> <input type="color" name="accent" value="<?php echo sp_e($branding['accent']); ?>"></label> <label><?php echo sp_e(wp_i18n('BRANDING_BG', 'Background')); ?> <input type="color" name="bg" value="<?php echo sp_e($branding['bg']); ?>"></label></p>
                     <?php if (wp_simple_get_setting('developer_code', '1') === '1'): ?>
-                    <p><label>Kod w nagłówku<br><textarea name="header_code" rows="6" class="large-text code"><?php echo sp_e($branding['header_code']); ?></textarea></label></p>
-                    <p><label>Kod w stopce<br><textarea name="footer_code" rows="6" class="large-text code"><?php echo sp_e($branding['footer_code']); ?></textarea></label></p>
+                    <p><label><?php echo sp_e(wp_i18n('BRANDING_HEADER_CODE', 'Header code')); ?><br><textarea name="header_code" rows="6" class="large-text code"><?php echo sp_e($branding['header_code']); ?></textarea></label></p>
+                    <p><label><?php echo sp_e(wp_i18n('BRANDING_FOOTER_CODE', 'Footer code')); ?><br><textarea name="footer_code" rows="6" class="large-text code"><?php echo sp_e($branding['footer_code']); ?></textarea></label></p>
                     <?php endif; ?>
-                    <p><button type="submit" class="button button-primary">Zapisz branding</button></p>
+                    <p><button type="submit" class="button button-primary"><?php echo sp_e(wp_i18n('BRANDING_SAVE', 'Save settings')); ?></button></p>
                 </form>
             </div></div>
 
-            <div class="postbox"><div class="postbox-header"><h2>Logowanie i pasek front-endu</h2></div><div class="inside">
+            <div class="postbox"><div class="postbox-header"><h2><?php echo sp_e(wp_i18n('BRANDING_LOGIN_BAR_TITLE', 'Login screen and front-end bar')); ?></h2></div><div class="inside">
                 <form method="post" enctype="multipart/form-data" action="<?php echo sp_e(sp_admin_url('appearance')); ?>" style="margin-bottom:20px">
                     <?php sp_nonce_field('save_login_options'); ?>
                     <input type="hidden" name="sp_save_login" value="1">
-                    <p><label><input type="checkbox" name="login_show_password" value="1" <?php echo wp_simple_get_setting('login_show_password', '0') === '1' ? 'checked' : ''; ?>> Pokaż przycisk „Pokaż hasło”</label></p>
-                    <p><label><input type="checkbox" name="login_hide_forgot" value="1" <?php echo wp_simple_get_setting('login_hide_forgot', '0') === '1' ? 'checked' : ''; ?>> Ukryj link resetowania hasła</label></p>
-                    <p><label>Logo logowania<br><input type="file" name="login_logo" accept="image/png,image/jpeg,image/gif,image/webp"></label></p>
-                    <?php if (wp_simple_get_setting('login_logo', '') !== ''): ?><p><label><input type="checkbox" name="remove_login_logo" value="1"> usuń logo logowania</label></p><?php endif; ?>
-                    <p><button type="submit" class="button button-primary">Zapisz opcje logowania</button></p>
+                    <p><label><input type="checkbox" name="login_show_password" value="1" <?php echo wp_simple_get_setting('login_show_password', '0') === '1' ? 'checked' : ''; ?>> <?php echo sp_e(wp_i18n('BRANDING_SHOW_PASSWORD', 'Show "Show password" button')); ?></label></p>
+                    <p><label><input type="checkbox" name="login_hide_forgot" value="1" <?php echo wp_simple_get_setting('login_hide_forgot', '0') === '1' ? 'checked' : ''; ?>> <?php echo sp_e(wp_i18n('BRANDING_HIDE_FORGOT', 'Hide password reset link')); ?></label></p>
+                    <p><label><?php echo sp_e(wp_i18n('BRANDING_LOGIN_LOGO', 'Login logo')); ?><br><input type="file" name="login_logo" accept="image/png,image/jpeg,image/gif,image/webp"></label></p>
+                    <?php if (wp_simple_get_setting('login_logo', '') !== ''): ?><p><label><input type="checkbox" name="remove_login_logo" value="1"> <?php echo sp_e(wp_i18n('BRANDING_REMOVE_LOGO', 'remove logo')); ?></label></p><?php endif; ?>
+                    <p><button type="submit" class="button button-primary"><?php echo sp_e(wp_i18n('BRANDING_SAVE_LOGIN', 'Save login options')); ?></button></p>
                 </form>
                 <form method="post" action="<?php echo sp_e(sp_admin_url('appearance')); ?>">
                     <?php sp_nonce_field('save_frontend_bar'); ?>
                     <input type="hidden" name="sp_save_frontend" value="1">
-                    <p><label><input type="checkbox" name="frontend_bar" value="1" <?php echo wp_simple_get_setting('frontend_bar', '1') === '1' ? 'checked' : ''; ?>> Pokaż pasek administratora na stronie publicznej</label></p>
-                    <p><button type="submit" class="button button-primary">Zapisz pasek</button></p>
+                    <p><label><input type="checkbox" name="frontend_bar" value="1" <?php echo wp_simple_get_setting('frontend_bar', '1') === '1' ? 'checked' : ''; ?>> <?php echo sp_e(wp_i18n('BRANDING_SHOW_FRONT_BAR', 'Show admin bar on the public site')); ?></label></p>
+                    <p><button type="submit" class="button button-primary"><?php echo sp_e(wp_i18n('BRANDING_SAVE_BAR', 'Save bar')); ?></button></p>
                 </form>
             </div></div>
         </div>

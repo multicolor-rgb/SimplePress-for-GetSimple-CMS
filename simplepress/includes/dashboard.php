@@ -348,54 +348,54 @@ function wp_simple_dashboard_view() {
 
         <div id="wp-screen-meta-panel">
             <div style="font-size:13px;">
-                <legend style="font-weight:600; margin-bottom:12px; color:var(--wp-text-strong); font-size:14px;">Widoczność kafelków na pulpicie</legend>
+                <legend style="font-weight:600; margin-bottom:12px; color:var(--wp-text-strong); font-size:14px;"><?php echo sp_e(wp_i18n('DASH_WIDGET_VISIBILITY', 'Dashboard widget visibility')); ?></legend>
                 <div style="display:flex; gap:22px; flex-wrap:wrap; align-items:center;">
-                    <label style="cursor:pointer;"><input type="checkbox" class="screen-meta-toggle-box" data-target="widget-stats" checked> Statystyki odsłon</label>
-                    <label style="cursor:pointer;"><input type="checkbox" class="screen-meta-toggle-box" data-target="widget-glance" checked> W skrócie</label>
-                    <label style="cursor:pointer;"><input type="checkbox" class="screen-meta-toggle-box" data-target="widget-health" checked> Stan witryny i serwera</label>
-                    <label style="cursor:pointer;"><input type="checkbox" class="screen-meta-toggle-box" data-target="widget-draft" checked> Szybki szkic</label>
-                    <label style="cursor:pointer;"><input type="checkbox" class="screen-meta-toggle-box" data-target="widget-activity" checked> Aktywność</label>
-                    <button type="button" id="wp-toggle-grid-layout" class="button" style="margin-left:auto;">Pojedyncza kolumna</button>
+                    <label style="cursor:pointer;"><input type="checkbox" class="screen-meta-toggle-box" data-target="widget-stats" checked> <?php echo sp_e(wp_i18n('DASH_WIDGET_STATS', 'Views statistics')); ?></label>
+                    <label style="cursor:pointer;"><input type="checkbox" class="screen-meta-toggle-box" data-target="widget-glance" checked> <?php echo sp_e(wp_i18n('DASH_WIDGET_GLANCE', 'At a glance')); ?></label>
+                    <label style="cursor:pointer;"><input type="checkbox" class="screen-meta-toggle-box" data-target="widget-health" checked> <?php echo sp_e(wp_i18n('DASH_WIDGET_HEALTH', 'Site and server health')); ?></label>
+                    <label style="cursor:pointer;"><input type="checkbox" class="screen-meta-toggle-box" data-target="widget-draft" checked> <?php echo sp_e(wp_i18n('DASH_WIDGET_DRAFT', 'Quick draft')); ?></label>
+                    <label style="cursor:pointer;"><input type="checkbox" class="screen-meta-toggle-box" data-target="widget-activity" checked> <?php echo sp_e(wp_i18n('DASH_WIDGET_ACTIVITY', 'Activity')); ?></label>
+                    <button type="button" id="wp-toggle-grid-layout" class="button" style="margin-left:auto;"><?php echo sp_e(wp_i18n('DASH_SINGLE_COLUMN', 'Single column')); ?></button>
                 </div>
             </div>
         </div>
 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2 style="margin:0 !important; font-size:22px; font-weight:600;">Kokpit</h2>
+            <h2 style="margin:0 !important; font-size:22px; font-weight:600;"><?php echo sp_e(wp_i18n('TAB_DASHBOARD', 'Dashboard')); ?></h2>
             <button type="button" id="wp-screen-options-toggle" class="button" style="font-size:12px; background:var(--wp-surface-alt); border-color:var(--wp-border); color:var(--wp-blue); cursor:pointer; padding:5px 12px; border-radius:3px;">
-                Opcje ekranu <span id="wp-screen-arrow">▼</span>
+                <?php echo sp_e(wp_i18n('DASH_SCREEN_OPTIONS', 'Screen options')); ?> <span id="wp-screen-arrow">▼</span>
             </button>
         </div>
 
         <?php if (isset($_GET['saved'])): ?>
             <div class="updated" style="background: var(--wp-card-bg); border-left:4px solid var(--wp-success); padding:10px 15px; margin-bottom:20px; box-shadow:0 1px 2px rgba(0,0,0,0.04);">
-                <p style="margin:0; color:var(--wp-text-strong);">Szkic strony został pomyślnie zapisany.</p>
+                <p style="margin:0; color:var(--wp-text-strong);"><?php echo sp_e(wp_i18n('DASH_DRAFT_SAVED', 'Page draft saved successfully.')); ?></p>
             </div>
         <?php endif; ?>
 
         <div class="welcome-panel" style="background: var(--wp-card-bg); border:1px solid var(--wp-border, var(--wp-border)); border-radius:4px; padding:20px; margin-bottom:20px; box-shadow:0 1px 2px rgba(0,0,0,0.04);">
             <div class="welcome-panel-content">
-                <h2 style="margin:0 0 8px 0; font-size:18px;">Witaj w SimplePress!</h2>
-                <p style="margin:0 0 16px 0; color:var(--wp-text-muted); font-size:13px;">Skróty do najważniejszych obszarów Twojej witryny:</p>
+                <h2 style="margin:0 0 8px 0; font-size:18px;"><?php echo sp_e(wp_i18n('WELCOME_TO_WORDPRESS', 'Welcome to SimplePress!')); ?></h2>
+                <p style="margin:0 0 16px 0; color:var(--wp-text-muted); font-size:13px;"><?php echo sp_e(wp_i18n('DASH_SHORTCUTS', 'Shortcuts to the most important areas of your site:')); ?></p>
                 <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:20px;">
                     <div>
-                        <h3 style="font-size:14px; margin:0 0 10px 0;">Rozpocznij</h3>
-                        <a class="button button-primary" href="theme.php" style="padding:6px 14px;">Dostosuj motyw</a>
+                        <h3 style="font-size:14px; margin:0 0 10px 0;"><?php echo sp_e(wp_i18n('DASH_GET_STARTED', 'Get started')); ?></h3>
+                        <a class="button button-primary" href="theme.php" style="padding:6px 14px;"><?php echo sp_e(wp_i18n('DASH_CUSTOMIZE_THEME', 'Customize theme')); ?></a>
                     </div>
                     <div>
-                        <h3 style="font-size:14px; margin:0 0 10px 0;">Tworzenie treści</h3>
+                        <h3 style="font-size:14px; margin:0 0 10px 0;"><?php echo sp_e(wp_i18n('DASH_CONTENT_CREATION', 'Content creation')); ?></h3>
                         <ul style="margin:0; padding-left:18px; line-height:1.8; font-size:13px;">
-                            <li><a href="edit.php" style="text-decoration:none; color:var(--wp-blue);">Dodaj nową stronę</a></li>
-                            <li><a href="upload.php" style="text-decoration:none; color:var(--wp-blue);">Biblioteka mediów</a></li>
-                            <li><a href="<?php echo $SITEURL; ?>" target="_blank" style="text-decoration:none; color:var(--wp-blue);">Odwiedź witrynę ↗</a></li>
+                            <li><a href="edit.php" style="text-decoration:none; color:var(--wp-blue);"><?php echo sp_e(wp_i18n('DASH_ADD_NEW_PAGE', 'Add new page')); ?></a></li>
+                            <li><a href="upload.php" style="text-decoration:none; color:var(--wp-blue);"><?php echo sp_e(wp_i18n('DASH_MEDIA_LIBRARY', 'Media library')); ?></a></li>
+                            <li><a href="<?php echo $SITEURL; ?>" target="_blank" style="text-decoration:none; color:var(--wp-blue);"><?php echo sp_e(wp_i18n('DASH_VISIT_SITE', 'Visit site ↗')); ?></a></li>
                         </ul>
                     </div>
                     <div>
-                        <h3 style="font-size:14px; margin:0 0 10px 0;">Zarządzanie</h3>
+                        <h3 style="font-size:14px; margin:0 0 10px 0;"><?php echo sp_e(wp_i18n('DASH_MANAGEMENT', 'Management')); ?></h3>
                         <ul style="margin:0; padding-left:18px; line-height:1.8; font-size:13px;">
-                            <li><a href="load.php?id=simplepress&sub=plugin-repo" style="text-decoration:none; color:var(--wp-blue); font-weight:600;">Instalator wtyczek</a></li>
-                            <li><a href="components.php" style="text-decoration:none; color:var(--wp-blue);">Komponenty</a></li>
-                            <li><a href="plugins.php" style="text-decoration:none; color:var(--wp-blue);">Zainstalowane wtyczki (<?php echo $active_plugins_count; ?>)</a></li>
+                            <li><a href="load.php?id=simplepress&sub=plugin-repo" style="text-decoration:none; color:var(--wp-blue); font-weight:600;"><?php echo sp_e(wp_i18n('DASH_PLUGIN_INSTALLER', 'Plugin installer')); ?></a></li>
+                            <li><a href="components.php" style="text-decoration:none; color:var(--wp-blue);"><?php echo sp_e(wp_i18n('DASH_COMPONENTS', 'Components')); ?></a></li>
+                            <li><a href="plugins.php" style="text-decoration:none; color:var(--wp-blue);"><?php echo sp_e(sprintf(wp_i18n('DASH_INSTALLED_PLUGINS', 'Installed plugins (%d)'), $active_plugins_count)); ?></a></li>
                         </ul>
                     </div>
                 </div>
@@ -407,18 +407,18 @@ function wp_simple_dashboard_view() {
             <div class="postbox-container">
                 <div class="postbox" id="widget-stats">
                     <div class="postbox-header">
-                        <h2>Statystyki odsłon (ostatnie 7 dni)</h2>
+                        <h2><?php echo sp_e(wp_i18n('STATS_VIEWS', 'Views Statistics (Last 7 Days)')); ?></h2>
                         <span class="toggle-indicator">▼</span>
                     </div>
                     <div class="inside">
                         <div class="stats-summary">
                             <div class="stat-box">
                                 <span class="stat-num"><?php echo $total_views_week; ?></span>
-                                <span class="stat-desc">Wszystkie odsłony</span>
+                                <span class="stat-desc"><?php echo sp_e(wp_i18n('DASH_ALL_VIEWS', 'All views')); ?></span>
                             </div>
                             <div class="stat-box">
                                 <span class="stat-num"><?php echo $total_visitors_week; ?></span>
-                                <span class="stat-desc">Unikalne wizyty</span>
+                                <span class="stat-desc"><?php echo sp_e(wp_i18n('DASH_UNIQUE_VISITS', 'Unique visits')); ?></span>
                             </div>
                         </div>
 
@@ -427,7 +427,7 @@ function wp_simple_dashboard_view() {
                                 $pct = ($max_views > 0 && $ddata['views'] > 0) ? round(($ddata['views'] / $max_views) * 100) : 4;
                             ?>
                                 <div class="chart-col">
-                                    <div class="bar-fill" style="height: <?php echo max(5, $pct); ?>%;" title="<?php echo $ddata['views']; ?> odsłon / <?php echo $ddata['visitors']; ?> wizyt"></div>
+                                    <div class="bar-fill" style="height: <?php echo max(5, $pct); ?>%;" title="<?php echo sp_e(sprintf(wp_i18n('DASH_VIEWS_VISITS', '%1$d views / %2$d visits'), $ddata['views'], $ddata['visitors'])); ?>"></div>
                                     <span class="bar-label"><?php echo $ddata['label']; ?></span>
                                 </div>
                             <?php endforeach; ?>
@@ -437,17 +437,17 @@ function wp_simple_dashboard_view() {
 
                 <div class="postbox" id="widget-glance">
                     <div class="postbox-header">
-                        <h2>W skrócie</h2>
+                        <h2><?php echo sp_e(wp_i18n('DASH_WIDGET_GLANCE', 'At a glance')); ?></h2>
                         <span class="toggle-indicator">▼</span>
                     </div>
                     <div class="inside">
                         <ul style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:0; padding:0; list-style:none; font-size:13px;">
-                            <li><a href="pages.php" style="text-decoration:none; color:var(--wp-blue); font-weight:600;">📄 <?php echo ($pages_count - $drafts_count); ?> Stron opublikowanych</a></li>
-                            <li><a href="pages.php" style="text-decoration:none; color:var(--wp-text-muted);">📝 <?php echo $drafts_count; ?> Szkiców</a></li>
-                            <li><a href="upload.php" style="text-decoration:none; color:var(--wp-blue); font-weight:600;">🖼️ <?php echo $files_count; ?> Plików mediów</a></li>
-                            <li><span style="color:var(--wp-text-muted);">💾 <?php echo $uploads_size_str; ?> w Uploads</span></li>
-                            <li><a href="components.php" style="text-decoration:none; color:var(--wp-blue);">🧩 <?php echo $components_count; ?> Komponentów</a></li>
-                            <li><a href="plugins.php" style="text-decoration:none; color:var(--wp-blue);">🔌 <?php echo $active_plugins_count; ?> Aktywnych wtyczek</a></li>
+                            <li><a href="pages.php" style="text-decoration:none; color:var(--wp-blue); font-weight:600;">📄 <?php echo ($pages_count - $drafts_count); ?> <?php echo sp_e(wp_i18n('DASH_PUBLISHED_PAGES', 'Published pages')); ?></a></li>
+                            <li><a href="pages.php" style="text-decoration:none; color:var(--wp-text-muted);">📝 <?php echo $drafts_count; ?> <?php echo sp_e(wp_i18n('DASH_DRAFTS', 'Drafts')); ?></a></li>
+                            <li><a href="upload.php" style="text-decoration:none; color:var(--wp-blue); font-weight:600;">🖼️ <?php echo $files_count; ?> <?php echo sp_e(wp_i18n('DASH_MEDIA_FILES', 'Media files')); ?></a></li>
+                            <li><span style="color:var(--wp-text-muted);">💾 <?php echo sp_e(sprintf(wp_i18n('DASH_UPLOADS_SIZE', '%s in Uploads'), $uploads_size_str)); ?></span></li>
+                            <li><a href="components.php" style="text-decoration:none; color:var(--wp-blue);">🧩 <?php echo $components_count; ?> <?php echo sp_e(wp_i18n('DASH_COMPONENTS_COUNT', 'Components')); ?></a></li>
+                            <li><a href="plugins.php" style="text-decoration:none; color:var(--wp-blue);">🔌 <?php echo $active_plugins_count; ?> <?php echo sp_e(wp_i18n('DASH_ACTIVE_PLUGINS', 'Active plugins')); ?></a></li>
                         </ul>
                     </div>
                 </div>
@@ -456,50 +456,50 @@ function wp_simple_dashboard_view() {
             <div class="postbox-container">
                 <div class="postbox" id="widget-health">
                     <div class="postbox-header">
-                        <h2>Stan środowiska i serwera</h2>
+                        <h2><?php echo sp_e(wp_i18n('DASH_SERVER_HEALTH', 'Environment and server health')); ?></h2>
                         <span class="toggle-indicator">▼</span>
                     </div>
                     <div class="inside">
                         <table style="width:100%; border-collapse:collapse; font-size:12px; line-height:2.2;">
                             <tr style="border-bottom: 1px solid var(--wp-border-light);">
-                                <td>Wersja PHP:</td>
+                                <td><?php echo sp_e(wp_i18n('DASH_PHP_VERSION', 'PHP version')); ?>:</td>
                                 <td style="text-align:right;"><strong><?php echo $php_ver; ?></strong></td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--wp-border-light);">
-                                <td>Baza SQLite3:</td>
+                                <td><?php echo sp_e(wp_i18n('DASH_SQLITE', 'SQLite3 database')); ?>:</td>
                                 <td style="text-align:right;">
                                     <?php if ($sqlite_installed): ?>
-                                        <span style="color:var(--wp-success); font-weight:600;">Aktywna</span>
+                                        <span style="color:var(--wp-success); font-weight:600;"><?php echo sp_e(wp_i18n('DASH_ACTIVE', 'Active')); ?></span>
                                     <?php else: ?>
-                                        <span style="color:var(--wp-danger); font-weight:600;">Niedostępna</span>
+                                        <span style="color:var(--wp-danger); font-weight:600;"><?php echo sp_e(wp_i18n('DASH_UNAVAILABLE', 'Unavailable')); ?></span>
                                     <?php endif; ?>
                                 </td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--wp-border-light);">
-                                <td>Biblioteka graficzna GD:</td>
+                                <td><?php echo sp_e(wp_i18n('DASH_GD_LIBRARY', 'GD graphics library')); ?>:</td>
                                 <td style="text-align:right;">
                                     <?php if ($gd_installed): ?>
-                                        <span style="color:var(--wp-success);">Dostępna (Generowanie miniatur)</span>
+                                        <span style="color:var(--wp-success);"><?php echo sp_e(wp_i18n('DASH_GD_AVAILABLE', 'Available (thumbnail generation)')); ?></span>
                                     <?php else: ?>
-                                        <span style="color:var(--wp-danger);">Brak GD</span>
+                                        <span style="color:var(--wp-danger);"><?php echo sp_e(wp_i18n('DASH_GD_MISSING', 'GD missing')); ?></span>
                                     <?php endif; ?>
                                 </td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--wp-border-light);">
-                                <td>Limit pamięci RAM:</td>
+                                <td><?php echo sp_e(wp_i18n('DASH_MEMORY_LIMIT', 'Memory limit')); ?>:</td>
                                 <td style="text-align:right;"><strong><?php echo $memory_limit; ?></strong></td>
                             </tr>
                             <tr style="border-bottom: 1px solid var(--wp-border-light);">
-                                <td>Maks. rozmiar uploadu:</td>
+                                <td><?php echo sp_e(wp_i18n('DASH_MAX_UPLOAD', 'Max upload size')); ?>:</td>
                                 <td style="text-align:right;"><strong><?php echo $upload_max; ?></strong></td>
                             </tr>
                             <tr>
-                                <td>Uprawnienia zapisu (Uploads / Pages):</td>
+                                <td><?php echo sp_e(wp_i18n('DASH_WRITE_PERMISSIONS', 'Write permissions (Uploads / Pages)')); ?>:</td>
                                 <td style="text-align:right;">
                                     <?php if ($uploads_writable && $pages_writable): ?>
-                                        <span style="color:var(--wp-success); font-weight:600;">Prawidłowe</span>
+                                        <span style="color:var(--wp-success); font-weight:600;"><?php echo sp_e(wp_i18n('DASH_PERMISSIONS_OK', 'OK')); ?></span>
                                     <?php else: ?>
-                                        <span style="color:var(--wp-danger); font-weight:600;">Wymagana korekta uprawnień</span>
+                                        <span style="color:var(--wp-danger); font-weight:600;"><?php echo sp_e(wp_i18n('DASH_PERMISSIONS_FIX', 'Permission fix required')); ?></span>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -509,20 +509,20 @@ function wp_simple_dashboard_view() {
 
                 <div class="postbox" id="widget-draft">
                     <div class="postbox-header">
-                        <h2>Szybki szkic</h2>
+                        <h2><?php echo sp_e(wp_i18n('QUICK_DRAFT', 'Quick Draft')); ?></h2>
                         <span class="toggle-indicator">▼</span>
                     </div>
                     <div class="inside">
                         <form method="post" action="load.php?id=simplepress&amp;sub=dashboard">
                             <?php sp_nonce_field('quick_draft'); ?>
                             <p style="margin:0 0 10px 0;">
-                                <input type="text" name="post_title" placeholder="Tytuł wpisu lub podstrony..." style="width:100%; box-sizing:border-box; padding:7px 10px; border: 1px solid var(--wp-input-border); border-radius:4px; font-size:13px;" required />
+                                <input type="text" name="post_title" placeholder="<?php echo sp_e(wp_i18n('DASH_POST_TITLE_PLACEHOLDER', 'Post or page title...')); ?>" style="width:100%; box-sizing:border-box; padding:7px 10px; border: 1px solid var(--wp-input-border); border-radius:4px; font-size:13px;" required />
                             </p>
                             <p style="margin:0 0 12px 0;">
-                                <textarea name="post_content" placeholder="O czym chcesz napisać?" rows="4" style="width:100%; box-sizing:border-box; padding:8px 10px; border: 1px solid var(--wp-input-border); border-radius:4px; font-size:13px;"></textarea>
+                                <textarea name="post_content" placeholder="<?php echo sp_e(wp_i18n('DASH_POST_CONTENT_PLACEHOLDER', 'What do you want to write about?')); ?>" rows="4" style="width:100%; box-sizing:border-box; padding:8px 10px; border: 1px solid var(--wp-input-border); border-radius:4px; font-size:13px;"></textarea>
                             </p>
                             <p style="margin:0;">
-                                <input type="submit" name="wp_quick_draft" class="button button-primary" value="Zapisz jako szkic" style="cursor:pointer;" />
+                                <input type="submit" name="wp_quick_draft" class="button button-primary" value="<?php echo sp_e(wp_i18n('DASH_SAVE_DRAFT', 'Save draft')); ?>" style="cursor:pointer;" />
                             </p>
                         </form>
                     </div>
@@ -530,18 +530,18 @@ function wp_simple_dashboard_view() {
 
                 <div class="postbox" id="widget-activity">
                     <div class="postbox-header">
-                        <h2>Aktywność</h2>
+                        <h2><?php echo sp_e(wp_i18n('ACTIVITY', 'Activity')); ?></h2>
                         <span class="toggle-indicator">▼</span>
                     </div>
                     <div class="inside">
-                        <p style="margin:0 0 10px 0; font-size:12px; color:var(--wp-text-muted);">Ostatnio modyfikowane podstrony:</p>
+                        <p style="margin:0 0 10px 0; font-size:12px; color:var(--wp-text-muted);"><?php echo sp_e(wp_i18n('DASH_RECENTLY_MODIFIED', 'Recently modified pages:')); ?></p>
                         <ul style="margin:0; padding:0; list-style:none;">
                             <?php foreach ($recent_pages as $p): ?>
                                 <li style="padding:7px 0; border-bottom: 1px solid var(--wp-border-light); display:flex; justify-content:space-between; align-items:center; font-size:12px;">
                                     <a href="edit.php?id=<?php echo urlencode($p['url']); ?>" style="text-decoration:none; font-weight:600; color:var(--wp-blue);">
                                         <?php echo htmlspecialchars($p['title']); ?>
                                         <?php if (!empty($p['private'])): ?>
-                                            <span style="color:var(--wp-danger); font-weight:normal; font-size:11px;">[Szkic]</span>
+                                            <span style="color:var(--wp-danger); font-weight:normal; font-size:11px;"><?php echo sp_e(wp_i18n('DASH_DRAFT_BADGE', '[Draft]')); ?></span>
                                         <?php endif; ?>
                                     </a>
                                     <span style="color:var(--wp-text-faint);"><?php echo date('d.m, H:i', strtotime($p['date'])); ?></span>
@@ -557,6 +557,10 @@ function wp_simple_dashboard_view() {
 
     <script>
     (function() {
+        var dashI18n = <?php echo json_encode([
+            'single' => wp_i18n('DASH_SINGLE_COLUMN', 'Single column'),
+            'two' => wp_i18n('DASH_TWO_COLUMNS', 'Two columns'),
+        ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
         var screenToggle = document.getElementById("wp-screen-options-toggle");
         var screenMeta = document.getElementById("wp-screen-meta-panel");
         var screenArrow = document.getElementById("wp-screen-arrow");
@@ -575,13 +579,13 @@ function wp_simple_dashboard_view() {
         if (gridLayoutBtn && gridContainer) {
             if (localStorage.getItem("wp_dashboard_single_col") === "true") {
                 gridContainer.classList.add("single-column");
-                gridLayoutBtn.textContent = "Dwie kolumny";
+                gridLayoutBtn.textContent = dashI18n.two;
             }
             gridLayoutBtn.addEventListener("click", function() {
                 gridContainer.classList.toggle("single-column");
                 var isSingle = gridContainer.classList.contains("single-column");
                 localStorage.setItem("wp_dashboard_single_col", isSingle ? "true" : "false");
-                gridLayoutBtn.textContent = isSingle ? "Dwie kolumny" : "Pojedyncza kolumna";
+                gridLayoutBtn.textContent = isSingle ? dashI18n.two : dashI18n.single;
             });
         }
 

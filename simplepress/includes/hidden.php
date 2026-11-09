@@ -77,7 +77,7 @@ if (!function_exists('sp_enforce_hidden_sections')) {
         if ($hidden['hidegssettings'] && $file === 'settings') { $deny = true; }
         if ($deny) {
             sp_log('hidden_block', $file . ' ' . $id . ' ' . $sub);
-            sp_die('Ta sekcja została wyłączona przez administratora.', 403);
+            sp_die(wp_i18n('HIDDEN_DISABLED', 'This section has been disabled by the administrator.'), 403);
         }
     }
 }
@@ -96,7 +96,7 @@ if (!function_exists('sp_restrict_editor_role')) {
         }
         $sub = $_GET['sub'] ?? 'dashboard';
         if (!in_array($sub, ['dashboard', 'helpdesk'], true)) {
-            sp_die('Ta sekcja wymaga roli administratora.', 403);
+            sp_die(wp_i18n('HIDDEN_ADMIN_REQUIRED', 'This section requires administrator role.'), 403);
         }
     }
 }
@@ -124,9 +124,9 @@ if (!function_exists('wp_simple_hidden_view')) {
         ?>
         <div class="wrap">
             <?php wp_simple_render_subtabs(); ?>
-            <h1><?php echo sp_e(wp_i18n('TAB_HIDDEN', 'Ukryte sekcje')); ?></h1>
-            <?php if (isset($_GET['saved'])): ?><div class="notice notice-success"><p>Ustawienia zostały zapisane.</p></div><?php endif; ?>
-            <p class="description">Ukrycie sekcji działa po stronie serwera. Użytkownik nie może wejść na ukrytą stronę przez bezpośredni adres URL.</p>
+            <h1><?php echo sp_e(wp_i18n('TAB_HIDDEN', 'Hidden sections')); ?></h1>
+            <?php if (isset($_GET['saved'])): ?><div class="notice notice-success"><p><?php echo sp_e(wp_i18n('HIDDEN_SAVED', 'Settings saved.')); ?></p></div><?php endif; ?>
+            <p class="description"><?php echo sp_e(wp_i18n('HIDDEN_HINT', 'Hiding sections works server-side. Users cannot access a hidden page via a direct URL.')); ?></p>
             <?php foreach ($users as $file): $u = basename($file, '.xml'); $hidden = sp_hidden_for($u); ?>
             <div class="postbox" style="max-width:900px;margin-bottom:18px">
                 <div class="postbox-header"><h2><?php echo sp_e($u); ?></h2></div>
@@ -138,16 +138,16 @@ if (!function_exists('wp_simple_hidden_view')) {
                         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:4px 20px">
                             <?php
                             $labels = [
-                                'hidepages' => 'Strony', 'hidefiles' => 'Pliki', 'hidethemes' => 'Motywy',
-                                'hidebackup' => 'Kopie zapasowe', 'hideplugin' => 'Wtyczki', 'hidesupport' => 'Pomoc',
-                                'hidesettings' => 'SimplePress', 'hidegssettings' => 'Ustawienia GetSimple', 'hidei18n' => 'i18n Gallery',
+                                'hidepages' => wp_i18n('HIDDEN_PAGES', 'Pages'), 'hidefiles' => wp_i18n('HIDDEN_FILES', 'Files'), 'hidethemes' => wp_i18n('HIDDEN_THEMES', 'Themes'),
+                                'hidebackup' => wp_i18n('HIDDEN_BACKUPS', 'Backups'), 'hideplugin' => wp_i18n('HIDDEN_PLUGINS', 'Plugins'), 'hidesupport' => wp_i18n('HIDDEN_HELP', 'Help'),
+                                'hidesettings' => 'SimplePress', 'hidegssettings' => wp_i18n('HIDDEN_GS_SETTINGS', 'GetSimple settings'), 'hidei18n' => 'i18n Gallery',
                             ];
                             foreach ($labels as $key => $label):
                             ?>
                             <label><input type="checkbox" name="<?php echo sp_e($key); ?>" value="1" <?php echo !empty($hidden[$key]) ? 'checked' : ''; ?>> <?php echo sp_e($label); ?></label>
                             <?php endforeach; ?>
                         </div>
-                        <p><button type="submit" class="button button-primary">Zapisz</button></p>
+                        <p><button type="submit" class="button button-primary"><?php echo sp_e(wp_i18n('SAVE', 'Save changes')); ?></button></p>
                     </form>
                 </div>
             </div>

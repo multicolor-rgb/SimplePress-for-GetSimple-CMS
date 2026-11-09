@@ -160,22 +160,22 @@ function wp_simple_migrate_view() {
             <?php if (function_exists('wp_simple_render_subtabs')) { wp_simple_render_subtabs(); } ?>
 
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
-                <h2 style="margin:0 !important;">Narzędzia migracji i SSL</h2>
+                <h2 style="margin:0 !important;"><?php echo sp_e(wp_i18n('MIGRATE_TITLE', 'Migration and SSL tools')); ?></h2>
             </div>
 
             <?php if (isset($_GET['migrated'])): ?>
-                <div class="updated"><p>Pomyślnie zaktualizowano linki w <strong><?php echo (int)$_GET['migrated']; ?></strong> plikach stron!</p></div>
+                <div class="updated"><p><?php echo sp_e(sprintf(wp_i18n('MIGRATE_SUCCESS_COUNT', 'Successfully updated links in %d page files!'), (int) $_GET['migrated'])); ?></p></div>
             <?php elseif (isset($_GET['ssl_saved'])): ?>
-                <div class="updated"><p>Ustawienia przekierowania SSL zostały pomyślnie zapisane w pliku <code>.htaccess</code>.</p></div>
+                <div class="updated"><p><?php echo sp_e(wp_i18n('MIGRATE_SSL_SAVED_HTACCESS', 'SSL redirect settings saved successfully in .htaccess.')); ?></p></div>
             <?php elseif (isset($_GET['error'])): ?>
                 <div class="error"><p>
                     <?php 
                         if ($_GET['error'] === 'empty_urls') {
-                            echo 'Błąd: Adres źródłowy i docelowy muszą być różne i nie mogą być puste.';
+                            echo sp_e(wp_i18n('MIGRATE_ERR_SAME', 'Source and target URLs must be different and cannot be empty.'));
                         } elseif ($_GET['error'] === 'htaccess_write') {
-                            echo 'Błąd: Nie udało się zmodyfikować pliku .htaccess. Sprawdź uprawnienia do zapisu w katalogu głównym.';
+                            echo sp_e(wp_i18n('MIGRATE_ERR_HTACCESS', 'Could not modify the .htaccess file. Check write permissions in the root directory.'));
                         } else {
-                            echo 'Wystąpił nieoczekiwany błąd.';
+                            echo sp_e(wp_i18n('MIGRATE_ERR_UNEXPECTED', 'An unexpected error occurred.'));
                         }
                     ?>
                 </p></div>
@@ -187,26 +187,26 @@ function wp_simple_migrate_view() {
                 <div class="postbox" style="background: var(--wp-card-bg); border: 1px solid var(--wp-border); border-radius: 3px; box-shadow: 0 1px 1px rgba(0,0,0,0.04); margin-bottom: 0;">
                     <div class="postbox-header" style="padding: 12px 16px; border-bottom: 1px solid var(--wp-border-light); background: var(--wp-surface-alt);">
                         <h3 style="margin: 0; font-size: 14px; font-weight: 600; display:flex; align-items:center; gap:8px;">
-                            <span class="dashicons dashicons-admin-site-alt3" style="color: var(--wp-blue);"></span> Migracja domeny i linków
+                            <span class="dashicons dashicons-admin-site-alt3" style="color: var(--wp-blue);"></span> <?php echo sp_e(wp_i18n('MIGRATE_DOMAIN_TITLE', 'Domain and link migration')); ?>
                         </h3>
                     </div>
                     <div class="inside" style="padding: 16px;">
                         <p style="color: var(--wp-text-muted); font-size: 13px; margin-top: 0;">
-                            Wyszukaj i podmień wszystkie wystąpienia starej domeny na nowy adres URL w treściach i załącznikach wszystkich podstron XML.
+                            <?php echo sp_e(wp_i18n('MIGRATE_DOMAIN_DESC', 'Search and replace all occurrences of the old domain with the new URL in the content and attachments of all XML pages.')); ?>
                         </p>
                         
                         <form method="post" action="load.php?id=simplepress&amp;sub=migrate">
                             <?php sp_nonce_field('migrate_domain'); ?>
                             <p>
-                                <label style="display:block; font-weight:600; margin-bottom:4px; font-size:13px;">Stary adres URL:</label>
+                                <label style="display:block; font-weight:600; margin-bottom:4px; font-size:13px;"><?php echo sp_e(wp_i18n('MIGRATE_OLD_URL', 'Old URL:')); ?></label>
                                 <input type="text" name="old_url" value="<?php echo htmlspecialchars(rtrim($SITEURL, '/')); ?>" required style="width: 100%; padding: 7px 10px; border: 1px solid var(--wp-input-border); border-radius: 4px; box-sizing: border-box; font-family: monospace;">
                             </p>
                             <p>
-                                <label style="display:block; font-weight:600; margin-bottom:4px; font-size:13px;">Nowy adres URL:</label>
-                                <input type="text" name="new_url" value="" placeholder="https://nowadomena.pl" required style="width: 100%; padding: 7px 10px; border: 1px solid var(--wp-input-border); border-radius: 4px; box-sizing: border-box; font-family: monospace;">
+                                <label style="display:block; font-weight:600; margin-bottom:4px; font-size:13px;"><?php echo sp_e(wp_i18n('MIGRATE_NEW_URL', 'New URL:')); ?></label>
+                                <input type="text" name="new_url" value="" placeholder="https://newdomain.com" required style="width: 100%; padding: 7px 10px; border: 1px solid var(--wp-input-border); border-radius: 4px; box-sizing: border-box; font-family: monospace;">
                             </p>
                             <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--wp-border-light);">
-                                <input type="submit" name="wp_migrate_domain_submit" class="button button-primary" value="Podmień domeny w stronach" onclick="return confirm('Czy na pewno chcesz zamienić adresy URL we wszystkich plikach stron? Ta operacja jest nieodwracalna.');">
+                                <input type="submit" name="wp_migrate_domain_submit" class="button button-primary" value="<?php echo sp_e(wp_i18n('MIGRATE_RUN', 'Replace domains in pages')); ?>" onclick="return confirm(<?php echo sp_e(sp_js(wp_i18n('MIGRATE_CONFIRM', 'Are you sure you want to replace URLs in all page files? This operation is irreversible.'))); ?>);">
                             </div>
                         </form>
                     </div>
@@ -216,12 +216,12 @@ function wp_simple_migrate_view() {
                 <div class="postbox" style="background: var(--wp-card-bg); border: 1px solid var(--wp-border); border-radius: 3px; box-shadow: 0 1px 1px rgba(0,0,0,0.04); margin-bottom: 0;">
                     <div class="postbox-header" style="padding: 12px 16px; border-bottom: 1px solid var(--wp-border-light); background: var(--wp-surface-alt);">
                         <h3 style="margin: 0; font-size: 14px; font-weight: 600; display:flex; align-items:center; gap:8px;">
-                            <span class="dashicons dashicons-lock" style="color: var(--wp-success);"></span> Bezpieczeństwo i wymuszenie HTTPS
+                            <span class="dashicons dashicons-lock" style="color: var(--wp-success);"></span> <?php echo sp_e(wp_i18n('MIGRATE_HTTPS_TITLE', 'Security and HTTPS enforcement')); ?>
                         </h3>
                     </div>
                     <div class="inside" style="padding: 16px;">
                         <p style="color: var(--wp-text-muted); font-size: 13px; margin-top: 0;">
-                            Wymusza automatyczne przekierowanie każdego połączenia HTTP na protokół HTTPS (kod 301) za pośrednictwem pliku <code>.htaccess</code>.
+                            <?php echo wp_i18n('MIGRATE_HTTPS_DESC', 'Forces automatic redirection of every HTTP connection to HTTPS (301) via the .htaccess file.'); ?>
                         </p>
 
                         <form method="post" action="load.php?id=simplepress&amp;sub=migrate">
@@ -229,15 +229,15 @@ function wp_simple_migrate_view() {
                             <div style="background: var(--wp-surface-alt); border: 1px solid var(--wp-border); padding: 14px; border-radius: 4px; margin-bottom: 16px;">
                                 <label style="cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600;">
                                     <input type="checkbox" name="turnon_ssl" value="on" <?php echo $ssl_active ? 'checked' : ''; ?> style="margin: 0;">
-                                    Włącz wymuszanie certyfikatu SSL (HTTPS)
+                                    <?php echo sp_e(wp_i18n('MIGRATE_SSL_ENABLE_FULL', 'Enable SSL (HTTPS) enforcement')); ?>
                                 </label>
                                 <p class="description" style="margin: 6px 0 0 24px; font-size: 12px; color: var(--wp-text-muted);">
-                                    Upewnij się, że Twoja domena posiada aktywny i poprawny certyfikat SSL przed zaznaczeniem tej opcji.
+                                    <?php echo sp_e(wp_i18n('MIGRATE_SSL_HINT', 'Make sure your domain has a valid and active SSL certificate before enabling this option.')); ?>
                                 </p>
                             </div>
 
                             <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--wp-border-light);">
-                                <input type="submit" name="wp_ssl_submit" class="button button-primary" value="Zapisz ustawienia SSL">
+                                <input type="submit" name="wp_ssl_submit" class="button button-primary" value="<?php echo sp_e(wp_i18n('MIGRATE_SSL_SAVE', 'Save SSL settings')); ?>">
                             </div>
                         </form>
                     </div>

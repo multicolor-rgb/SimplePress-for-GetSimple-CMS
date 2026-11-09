@@ -130,7 +130,7 @@ if (!function_exists('sp_plugin_fetch')) {
         if (function_exists('curl_init')) {
             $fp = @fopen($target, 'wb');
             if (!$fp) {
-                return [false, 'Nie można zapisać pliku tymczasowego.'];
+                return [false, wp_i18n('REPO_ERR_TMP', 'Cannot write temporary file.')];
             }
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_FILE, $fp);
@@ -149,25 +149,25 @@ if (!function_exists('sp_plugin_fetch')) {
             fclose($fp);
             if (!$ok || $status < 200 || $status >= 300) {
                 @unlink($target);
-                return [false, 'Nie udało się pobrać archiwum.'];
+                return [false, wp_i18n('REPO_ERR_DOWNLOAD', 'Could not download the archive.')];
             }
             $host = strtolower((string) parse_url($effective, PHP_URL_HOST));
             if (!in_array($host, sp_plugin_hosts(), true)) {
                 @unlink($target);
-                return [false, 'Przekierowanie na niedozwolony host.'];
+                return [false, wp_i18n('REPO_ERR_REDIRECT', 'Redirect to a disallowed host.')];
             }
             if (filesize($target) > 50 * 1024 * 1024) {
                 @unlink($target);
-                return [false, 'Archiwum jest zbyt duże.'];
+                return [false, wp_i18n('REPO_ERR_TOO_LARGE', 'Archive is too large.')];
             }
             return [true, ''];
         }
         $ctx = stream_context_create(['http' => ['timeout' => 120, 'follow_location' => 0, 'user_agent' => 'SimplePress/' . SP_VERSION], 'ssl' => ['verify_peer' => true, 'verify_peer_name' => true]]);
         $data = @file_get_contents($url, false, $ctx, 0, 50 * 1024 * 1024 + 1);
         if ($data === false || strlen($data) > 50 * 1024 * 1024) {
-            return [false, 'Nie udało się pobrać archiwum.'];
+            return [false, wp_i18n('REPO_ERR_DOWNLOAD', 'Could not download the archive.')];
         }
-        return sp_write_file($target, $data, 0640) ? [true, ''] : [false, 'Nie można zapisać archiwum.'];
+        return sp_write_file($target, $data, 0640) ? [true, ''] : [false, wp_i18n('REPO_ERR_WRITE', 'Cannot save the archive.')];
     }
 }
 
@@ -214,7 +214,7 @@ if (!function_exists('sp_install_plugin_zip')) {
     {
         $url = sp_url($url, false);
         if (!$url || stripos($url, 'https://') !== 0) {
-            return [false, 'Podaj poprawny adres HTTPS.'];
+            return [false, wp_i18n('REPO_ERR_HTTPS', 'Enter a valid HTTPS address.')];
         }
         $normalized = sp_plugin_normalize_url($url);
         $candidates = [$normalized];
@@ -224,16 +224,16 @@ if (!function_exists('sp_install_plugin_zip')) {
         foreach ($candidates as $candidate) {
             $host = strtolower((string) parse_url($candidate, PHP_URL_HOST));
             if (!in_array($host, sp_plugin_hosts(), true)) {
-                return [false, 'Ten host nie jest dozwolony.'];
+                return [false, wp_i18n('REPO_ERR_HOST', 'This host is not allowed.')];
             }
         }
         if (!class_exists('ZipArchive')) {
-            return [false, 'Rozszerzenie ZIP nie jest dostępne.'];
+            return [false, wp_i18n('REPO_ERR_ZIP', 'ZIP extension is not available.')];
         }
         $tmpRoot = sp_storage_dir() . '/tmp';
         sp_private_dir($tmpRoot);
         $zipFile = $tmpRoot . '/download-' . bin2hex(random_bytes(8)) . '.zip';
-        $fetched = [false, 'Nie udało się pobrać archiwum.'];
+        $fetched = [false, wp_i18n('REPO_ERR_DOWNLOAD', 'Could not download the archive.')];
         foreach ($candidates as $candidate) {
             $fetched = sp_plugin_fetch($candidate, $zipFile);
             if ($fetched[0]) {
@@ -252,7 +252,7 @@ if (!function_exists('sp_install_plugin_zip')) {
         if ($zip->open($zipFile) !== true) {
             @unlink($zipFile);
             sp_security_delete_tree($extract, $tmpRoot);
-            return [false, 'Nie można otworzyć archiwum ZIP.'];
+            return [false, wp_i18n('REPO_ERR_OPEN', 'Cannot open ZIP archive.')];
         }
         $total = 0;
         for ($i = 0; $i < $zip->numFiles; $i++) {
@@ -263,21 +263,21 @@ if (!function_exists('sp_install_plugin_zip')) {
                 $zip->close();
                 @unlink($zipFile);
                 sp_security_delete_tree($extract, $tmpRoot);
-                return [false, 'Archiwum zawiera niebezpieczne wpisy.'];
+                return [false, wp_i18n('REPO_ERR_DANGEROUS', 'Archive contains dangerous entries.')];
             }
             $total += (int) ($stat['size'] ?? 0);
             if ($total > 100 * 1024 * 1024 || $zip->numFiles > 3000) {
                 $zip->close();
                 @unlink($zipFile);
                 sp_security_delete_tree($extract, $tmpRoot);
-                return [false, 'Archiwum jest zbyt duże.'];
+                return [false, wp_i18n('REPO_ERR_TOO_LARGE', 'Archive is too large.')];
             }
         }
         if (!$zip->extractTo($extract)) {
             $zip->close();
             @unlink($zipFile);
             sp_security_delete_tree($extract, $tmpRoot);
-            return [false, 'Nie udało się rozpakować archiwum.'];
+            return [false, wp_i18n('REPO_ERR_EXTRACT', 'Could not extract the archive.')];
         }
         $zip->close();
         @unlink($zipFile);
@@ -302,27 +302,27 @@ if (!function_exists('sp_install_plugin_zip')) {
         }
         if ($mainFile === null) {
             sp_security_delete_tree($extract, $tmpRoot);
-            return [false, 'Archiwum nie zawiera głównego pliku pluginu.'];
+            return [false, wp_i18n('REPO_ERR_NO_MAIN', 'Archive does not contain a main plugin file.')];
         }
         $pluginId = basename($mainFile, '.php');
         if (!preg_match('/^[A-Za-z0-9_\-]+$/', (string) $pluginId) || strtolower($pluginId) === 'simplepress') {
             sp_security_delete_tree($extract, $tmpRoot);
-            return [false, 'Archiwum nie zawiera poprawnego pluginu.'];
+            return [false, wp_i18n('REPO_ERR_BAD_PLUGIN', 'Archive does not contain a valid plugin.')];
         }
         foreach ((array) @scandir($source) as $item) {
             if ($item === '.' || $item === '..') { continue; }
             if (strtolower($item) === 'simplepress' || strtolower($item) === 'simplepress.php') {
                 sp_security_delete_tree($extract, $tmpRoot);
-                return [false, 'Archiwum próbuje nadpisać SimplePress.'];
+                return [false, wp_i18n('REPO_ERR_OVERWRITE', 'Archive tries to overwrite SimplePress.')];
             }
         }
         $ok = sp_plugin_copy($source, GSPLUGINPATH, true);
         sp_security_delete_tree($extract, $tmpRoot);
         if (!$ok) {
-            return [false, 'Nie udało się skopiować plików pluginu.'];
+            return [false, wp_i18n('REPO_ERR_COPY', 'Could not copy plugin files.')];
         }
         sp_log('plugin_install', $pluginId . ' ' . $url);
-        return [true, 'Plugin ' . $pluginId . ' został zainstalowany.'];
+        return [true, sprintf(wp_i18n('REPO_INSTALL_SUCCESS', 'Plugin %s installed.'), $pluginId)];
     }
 }
 
@@ -351,10 +351,10 @@ if (!function_exists('sp_uninstall_plugin')) {
     {
         $id = (string) $id;
         if (!preg_match('/^[A-Za-z0-9_\-]+$/', $id) || $id === 'simplepress') {
-            return [false, 'Nieprawidłowa nazwa pluginu.'];
+            return [false, wp_i18n('REPO_ERR_BAD_NAME', 'Invalid plugin name.')];
         }
         $root = realpath(GSPLUGINPATH);
-        if ($root === false) { return [false, 'Nie można ustalić katalogu pluginów.']; }
+        if ($root === false) { return [false, wp_i18n('REPO_ERR_NO_PLUGIN_DIR', 'Cannot determine the plugins directory.')]; }
         $did = false;
         $dir = GSPLUGINPATH . $id;
         if (is_dir($dir) && sp_path_within($dir, $root, true)) {
@@ -364,9 +364,9 @@ if (!function_exists('sp_uninstall_plugin')) {
         if (is_file($file) && sp_path_within($file, $root, true)) {
             $did = @unlink($file) || $did;
         }
-        if (!$did) { return [false, 'Nie znaleziono pluginu.']; }
+        if (!$did) { return [false, wp_i18n('REPO_UNINSTALL_ERROR', 'Plugin not found.')]; }
         sp_log('plugin_uninstall', $id);
-        return [true, 'Plugin ' . $id . ' został usunięty.'];
+        return [true, sprintf(wp_i18n('REPO_UNINSTALL_SUCCESS', 'Plugin %s removed.'), $id)];
     }
 }
 
@@ -396,38 +396,38 @@ if (!function_exists('wp_simple_plugin_repo_view')) {
         ?>
         <div class="wrap">
             <?php wp_simple_render_subtabs(); ?>
-            <h1><?php echo sp_e(wp_i18n('TAB_PLUGINS', 'Wtyczki')); ?></h1>
-            <?php if (isset($_GET['saved'])): ?><div class="notice notice-success"><p>Operacja zakończona pomyślnie.</p></div><?php endif; ?>
+            <h1><?php echo sp_e(wp_i18n('REPO_TITLE', 'Plugins')); ?></h1>
+            <?php if (isset($_GET['saved'])): ?><div class="notice notice-success"><p><?php echo sp_e(wp_i18n('REPO_SUCCESS', 'Operation completed successfully.')); ?></p></div><?php endif; ?>
             <?php if (isset($_GET['error'])): ?><div class="notice notice-error"><p><?php echo sp_e((string) $_GET['error']); ?></p></div><?php endif; ?>
-            <div class="postbox"><div class="postbox-header"><h2>Zainstaluj z archiwum ZIP</h2></div><div class="inside">
+            <div class="postbox"><div class="postbox-header"><h2><?php echo sp_e(wp_i18n('REPO_INSTALL_ZIP', 'Install from ZIP archive')); ?></h2></div><div class="inside">
                 <form method="post" action="<?php echo sp_e(sp_admin_url('plugin-repo')); ?>">
                     <?php sp_nonce_field('install_plugin'); ?>
                     <input type="hidden" name="sp_install_plugin" value="1">
                     <input type="url" class="large-text" name="url" placeholder="https://github.com/..." required>
-                    <p class="description">Dozwolone hosty: GitHub i getsimple-ce.ovh (tylko HTTPS).</p>
-                    <p><button type="submit" class="button button-primary">Zainstaluj</button></p>
+                    <p class="description"><?php echo sp_e(wp_i18n('REPO_ALLOWED_HOSTS', 'Allowed hosts: GitHub and getsimple-ce.ovh (HTTPS only).')); ?></p>
+                    <p><button type="submit" class="button button-primary"><?php echo sp_e(wp_i18n('REPO_INSTALL', 'Install')); ?></button></p>
                 </form>
             </div></div>
-            <div class="postbox"><div class="postbox-header"><h2>Zainstalowane wtyczki</h2></div><div class="inside">
+            <div class="postbox"><div class="postbox-header"><h2><?php echo sp_e(wp_i18n('REPO_INSTALLED', 'Installed plugins')); ?></h2></div><div class="inside">
                 <table class="widefat striped">
-                    <thead><tr><th>Wtyczka</th><th>Akcje</th></tr></thead><tbody>
+                    <thead><tr><th><?php echo sp_e(wp_i18n('REPO_PLUGIN', 'Plugin')); ?></th><th><?php echo sp_e(wp_i18n('REPO_ACTIONS', 'Actions')); ?></th></tr></thead><tbody>
                     <?php foreach ($installed as $id => $name): ?>
                     <tr><td><strong><?php echo sp_e($name); ?></strong> <code><?php echo sp_e($id); ?></code></td><td>
-                        <form method="post" action="<?php echo sp_e(sp_admin_url('plugin-repo')); ?>" style="display:inline" onsubmit="return confirm('Usunąć ten plugin?');">
+                        <form method="post" action="<?php echo sp_e(sp_admin_url('plugin-repo')); ?>" style="display:inline" onsubmit="return confirm(<?php echo sp_e(sp_js(wp_i18n('REPO_UNINSTALL_CONFIRM', 'Remove this plugin?'))); ?>);">
                             <?php sp_nonce_field('uninstall_plugin'); ?>
                             <input type="hidden" name="sp_uninstall_plugin" value="1">
                             <input type="hidden" name="plugin" value="<?php echo sp_e($id); ?>">
-                            <button type="submit" class="button button-link-delete">Odinstaluj</button>
+                            <button type="submit" class="button button-link-delete"><?php echo sp_e(wp_i18n('REPO_UNINSTALL', 'Uninstall')); ?></button>
                         </form>
                     </td></tr>
                     <?php endforeach; ?>
-                    <?php if (empty($installed)): ?><tr><td colspan="2">Brak wtyczek.</td></tr><?php endif; ?>
+                    <?php if (empty($installed)): ?><tr><td colspan="2"><?php echo sp_e(wp_i18n('REPO_NO_PLUGINS', 'No plugins.')); ?></td></tr><?php endif; ?>
                     </tbody>
                 </table>
             </div></div>
             <?php if (!empty($catalog)): ?>
-            <div class="postbox"><div class="postbox-header"><h2>Katalog GetSimple CE</h2></div><div class="inside">
-                <input type="search" id="sp-catalog-search" class="regular-text" placeholder="Szukaj wtyczki...">
+            <div class="postbox"><div class="postbox-header"><h2><?php echo sp_e(wp_i18n('REPO_CATALOG', 'GetSimple CE catalog')); ?></h2></div><div class="inside">
+                <input type="search" id="sp-catalog-search" class="regular-text" placeholder="<?php echo sp_e(wp_i18n('REPO_SEARCH', 'Search plugins...')); ?>">
                 <div class="sp-catalog" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px">
                     <?php foreach ($catalog as $item): if (!is_array($item)) { continue; } ?>
                     <div class="postbox sp-catalog-item" style="margin:0;padding:12px" data-search="<?php echo sp_e(strtolower(($item['name'] ?? '') . ' ' . ($item['info'] ?? '') . ' ' . ($item['tags'] ?? ''))); ?>">

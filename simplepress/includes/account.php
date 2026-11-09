@@ -17,7 +17,7 @@ if (!function_exists('wp_simple_handle_account_actions')) {
         }
         sp_require_post('save_account');
         if (!sp_is_authenticated()) {
-            sp_die('Authentication required.', 403);
+            sp_die(wp_i18n('ERROR_AUTH', 'Authentication required.'), 403);
         }
 
         $scheme = (string) ($_POST['admin_scheme'] ?? '');
@@ -68,52 +68,52 @@ if (!function_exists('wp_simple_account_view')) {
         ?>
         <div class="wrap">
             <?php wp_simple_render_subtabs(); ?>
-            <h1><?php echo sp_e(wp_i18n('TAB_ACCOUNT', 'Moje konto')); ?></h1>
-            <?php if (isset($_GET['saved'])): ?><div class="notice notice-success"><p><?php echo sp_e(wp_i18n('ACCOUNT_SAVED', 'Ustawienia konta zostały zapisane.')); ?></p></div><?php endif; ?>
+            <h1><?php echo sp_e(wp_i18n('TAB_ACCOUNT', 'My account')); ?></h1>
+            <?php if (isset($_GET['saved'])): ?><div class="notice notice-success"><p><?php echo sp_e(wp_i18n('ACCOUNT_SAVED', 'Account settings saved.')); ?></p></div><?php endif; ?>
 
             <div class="postbox">
-                <div class="postbox-header"><h2><?php echo sp_e(wp_i18n('ACCOUNT_PROFILE', 'Profil')); ?></h2></div>
+                <div class="postbox-header"><h2><?php echo sp_e(wp_i18n('ACCOUNT_PROFILE', 'Profile')); ?></h2></div>
                 <div class="inside">
-                    <p><strong><?php echo sp_e(wp_i18n('ACCOUNT_USER', 'Użytkownik')); ?>:</strong> <?php echo sp_e($user); ?></p>
-                    <p><strong><?php echo sp_e(wp_i18n('ACCOUNT_ROLE', 'Rola')); ?>:</strong> <?php echo sp_e($role === 'editor' ? wp_i18n('ROLE_EDITOR', 'Redaktor') : wp_i18n('ROLE_ADMIN', 'Administrator')); ?></p>
-                    <p><a class="button" href="settings.php#profile"><?php echo sp_e(wp_i18n('ACCOUNT_GS_PROFILE', 'Edytuj profil GetSimple')); ?></a></p>
+                    <p><strong><?php echo sp_e(wp_i18n('ACCOUNT_USER', 'User')); ?>:</strong> <?php echo sp_e($user); ?></p>
+                    <p><strong><?php echo sp_e(wp_i18n('ACCOUNT_ROLE', 'Role')); ?>:</strong> <?php echo sp_e($role === 'editor' ? wp_i18n('ROLE_EDITOR', 'Editor') : wp_i18n('ROLE_ADMIN', 'Administrator')); ?></p>
+                    <p><a class="button" href="settings.php#profile"><?php echo sp_e(wp_i18n('ACCOUNT_GS_PROFILE', 'Edit GetSimple profile')); ?></a></p>
                 </div>
             </div>
 
             <div class="postbox">
-                <div class="postbox-header"><h2><?php echo sp_e(wp_i18n('ACCOUNT_PREFERENCES', 'Preferencje panelu')); ?></h2></div>
+                <div class="postbox-header"><h2><?php echo sp_e(wp_i18n('ACCOUNT_PREFERENCES', 'Panel preferences')); ?></h2></div>
                 <div class="inside">
                     <form method="post" action="<?php echo sp_e(sp_admin_url('account')); ?>">
                         <?php sp_nonce_field('save_account'); ?>
                         <input type="hidden" name="wp_save_account" value="1">
                         <p>
-                            <label for="sp-account-scheme"><strong><?php echo sp_e(wp_i18n('ACCOUNT_SCHEME', 'Schemat kolorów')); ?></strong></label><br>
+                            <label for="sp-account-scheme"><strong><?php echo sp_e(wp_i18n('ACCOUNT_SCHEME', 'Color scheme')); ?></strong></label><br>
                             <select name="admin_scheme" id="sp-account-scheme">
-                                <option value="" <?php echo $user_scheme === '' ? 'selected' : ''; ?>><?php echo sp_e(sprintf(wp_i18n('ACCOUNT_DEFAULT', 'Domyślny (globalny: %s)'), $schemes[$global_scheme] ?? $global_scheme)); ?></option>
+                                <option value="" <?php echo $user_scheme === '' ? 'selected' : ''; ?>><?php echo sp_e(sprintf(wp_i18n('ACCOUNT_DEFAULT', 'Default (global: %s)'), $schemes[$global_scheme] ?? $global_scheme)); ?></option>
                                 <?php foreach ($schemes as $key => $label): ?>
                                 <option value="<?php echo sp_e($key); ?>" <?php echo $user_scheme === $key ? 'selected' : ''; ?>><?php echo sp_e($label); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </p>
                         <p>
-                            <label for="sp-account-editor"><strong><?php echo sp_e(wp_i18n('ACCOUNT_EDITOR', 'Edytor treści')); ?></strong></label><br>
+                            <label for="sp-account-editor"><strong><?php echo sp_e(wp_i18n('ACCOUNT_EDITOR', 'Content editor')); ?></strong></label><br>
                             <select name="editor" id="sp-account-editor">
-                                <option value="" <?php echo $user_editor === '' ? 'selected' : ''; ?>><?php echo sp_e(sprintf(wp_i18n('ACCOUNT_DEFAULT', 'Domyślny (globalny: %s)'), $editors[$global_editor] ?? $global_editor)); ?></option>
+                                <option value="" <?php echo $user_editor === '' ? 'selected' : ''; ?>><?php echo sp_e(sprintf(wp_i18n('ACCOUNT_DEFAULT', 'Default (global: %s)'), $editors[$global_editor] ?? $global_editor)); ?></option>
                                 <?php foreach ($editors as $key => $label): ?>
                                 <option value="<?php echo sp_e($key); ?>" <?php echo $user_editor === $key ? 'selected' : ''; ?>><?php echo sp_e($label); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </p>
                         <p>
-                            <label for="sp-account-frontend-bar"><strong><?php echo sp_e(wp_i18n('ACCOUNT_FRONTEND_BAR', 'Pasek na stronie publicznej')); ?></strong></label><br>
+                            <label for="sp-account-frontend-bar"><strong><?php echo sp_e(wp_i18n('ACCOUNT_FRONTEND_BAR', 'Frontend admin bar')); ?></strong></label><br>
                             <select name="frontend_bar" id="sp-account-frontend-bar">
-                                <option value="" <?php echo $user_bar === '' ? 'selected' : ''; ?>><?php echo sp_e(sprintf(wp_i18n('ACCOUNT_DEFAULT', 'Domyślny (globalny: %s)'), $global_bar === '1' ? wp_i18n('YES', 'tak') : wp_i18n('NO', 'nie'))); ?></option>
-                                <option value="1" <?php echo $user_bar === '1' ? 'selected' : ''; ?>><?php echo sp_e(wp_i18n('SHOW', 'Pokaż')); ?></option>
-                                <option value="0" <?php echo $user_bar === '0' ? 'selected' : ''; ?>><?php echo sp_e(wp_i18n('HIDE', 'Ukryj')); ?></option>
+                                <option value="" <?php echo $user_bar === '' ? 'selected' : ''; ?>><?php echo sp_e(sprintf(wp_i18n('ACCOUNT_DEFAULT', 'Default (global: %s)'), $global_bar === '1' ? wp_i18n('YES', 'yes') : wp_i18n('NO', 'no'))); ?></option>
+                                <option value="1" <?php echo $user_bar === '1' ? 'selected' : ''; ?>><?php echo sp_e(wp_i18n('SHOW', 'Show')); ?></option>
+                                <option value="0" <?php echo $user_bar === '0' ? 'selected' : ''; ?>><?php echo sp_e(wp_i18n('HIDE', 'Hide')); ?></option>
                             </select>
                         </p>
-                        <p class="description"><?php echo sp_e(wp_i18n('ACCOUNT_HINT', 'Te ustawienia dotyczą tylko Twojego konta i nadpisują ustawienia globalne.')); ?></p>
-                        <p><button type="submit" class="button button-primary"><?php echo sp_e(wp_i18n('ACCOUNT_SAVE', 'Zapisz preferencje')); ?></button></p>
+                        <p class="description"><?php echo sp_e(wp_i18n('ACCOUNT_HINT', 'These settings apply only to your account and override global settings.')); ?></p>
+                        <p><button type="submit" class="button button-primary"><?php echo sp_e(wp_i18n('ACCOUNT_SAVE', 'Save preferences')); ?></button></p>
                     </form>
                 </div>
             </div>

@@ -2,6 +2,30 @@
 
 All notable changes to SimplePress are documented in this file.
 
+## [6.4.0] - 2026-11-09
+
+### Added
+
+- Complete English, Polish and Spanish translations for the admin UI.
+- JavaScript localization via `window.WP_I18N`.
+- Localized media library, customizer, dashboard, users, snippets, menu,
+  backups, migration, branding and theme settings.
+- Generic language loader with safe fallback to English.
+- New "Aurora Monogram" logo.
+
+### Fixed
+
+- Hardcoded Polish and English strings that ignored the selected language.
+- Missing `window.WP_I18N` object used by `wp-admin.js`.
+- Mixed-language labels and untranslated terms in Polish and Spanish.
+- Inconsistent fallbacks for the same translation keys.
+- Hardcoded `<html lang="pl">` on the maintenance page.
+- JavaScript confirm/alert messages that were not translatable.
+
+### Changed
+
+- Version bumped to 6.4.0.
+
 ## [6.3.1] - 2026-11-07
 
 ### Added

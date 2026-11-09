@@ -42,34 +42,34 @@ if (!function_exists('wp_simple_sqlite_view')) {
         ?>
         <div class="wrap">
             <?php wp_simple_render_subtabs(); ?>
-            <h1><?php echo sp_e(wp_i18n('TAB_SQLITE', 'Magazyn SQLite3')); ?></h1>
-            <?php if (isset($_GET['saved'])): ?><div class="notice notice-success"><p>Baza została zoptymalizowana.</p></div><?php endif; ?>
+            <h1><?php echo sp_e(wp_i18n('SQLITE_TITLE', 'SQLite3 storage')); ?></h1>
+            <?php if (isset($_GET['saved'])): ?><div class="notice notice-success"><p><?php echo sp_e(wp_i18n('SQLITE_OPTIMIZED', 'Database optimized.')); ?></p></div><?php endif; ?>
             <?php if (!$db): ?>
-                <div class="notice notice-warning"><p>Rozszerzenie SQLite3 jest niedostępne. SimplePress używa awaryjnego magazynu JSON, więc podstawowe funkcje nadal działają.</p></div>
+                <div class="notice notice-warning"><p><?php echo sp_e(wp_i18n('SQLITE_UNAVAILABLE', 'SQLite3 extension is unavailable. SimplePress uses a JSON fallback store, so basic features still work.')); ?></p></div>
             <?php else: ?>
                 <div class="postbox"><div class="inside">
-                    <p><strong>Plik bazy:</strong> <code><?php echo sp_e($dbFile); ?></code></p>
-                    <p><strong>Rozmiar:</strong> <?php echo sp_e(is_file($dbFile) ? (function_exists('fSize') ? fSize(filesize($dbFile)) : filesize($dbFile) . ' B') : '—'); ?></p>
-                    <p><strong>Wersja SQLite:</strong> <?php echo sp_e(SQLite3::version()['versionString'] ?? '—'); ?></p>
+                    <p><strong><?php echo sp_e(wp_i18n('SQLITE_DB_FILE', 'Database file:')); ?></strong> <code><?php echo sp_e($dbFile); ?></code></p>
+                    <p><strong><?php echo sp_e(wp_i18n('SIZE', 'Size')); ?>:</strong> <?php echo sp_e(is_file($dbFile) ? (function_exists('fSize') ? fSize(filesize($dbFile)) : filesize($dbFile) . ' B') : '—'); ?></p>
+                    <p><strong><?php echo sp_e(wp_i18n('SQLITE_VERSION', 'SQLite version:')); ?></strong> <?php echo sp_e(SQLite3::version()['versionString'] ?? '—'); ?></p>
                     <form method="post" action="<?php echo sp_e(sp_admin_url('sqlite')); ?>">
                         <?php sp_nonce_field('sqlite_vacuum'); ?>
                         <input type="hidden" name="sp_vacuum" value="1">
-                        <button type="submit" class="button">Optymalizuj bazę (VACUUM)</button>
+                        <button type="submit" class="button"><?php echo sp_e(wp_i18n('SQLITE_OPTIMIZE', 'Optimize database (VACUUM)')); ?></button>
                     </form>
                 </div></div>
-                <h2>Ustawienia w bazie</h2>
-                <table class="widefat striped" style="max-width:1000px"><thead><tr><th>Klucz</th><th>Wartość</th></tr></thead><tbody>
+                <h2><?php echo sp_e(wp_i18n('SQLITE_SETTINGS', 'Settings in the database')); ?></h2>
+                <table class="widefat striped" style="max-width:1000px"><thead><tr><th><?php echo sp_e(wp_i18n('THEME_KEY', 'Key')); ?></th><th><?php echo sp_e(wp_i18n('SQLITE_VALUE', 'Value')); ?></th></tr></thead><tbody>
                 <?php foreach ($settings as $key => $value): ?>
                     <tr><td><code><?php echo sp_e($key); ?></code></td><td><?php echo sp_e($value); ?></td></tr>
                 <?php endforeach; ?>
-                <?php if (empty($settings)): ?><tr><td colspan="2">Brak zapisanych ustawień.</td></tr><?php endif; ?>
+                <?php if (empty($settings)): ?><tr><td colspan="2"><?php echo sp_e(wp_i18n('SQLITE_NO_SETTINGS', 'No saved settings.')); ?></td></tr><?php endif; ?>
                 </tbody></table>
-                <h2>Role użytkowników</h2>
-                <table class="widefat striped" style="max-width:1000px"><thead><tr><th>Użytkownik</th><th>Rola</th><th>Nazwa</th></tr></thead><tbody>
+                <h2><?php echo sp_e(wp_i18n('SQLITE_USER_ROLES', 'User roles')); ?></h2>
+                <table class="widefat striped" style="max-width:1000px"><thead><tr><th><?php echo sp_e(wp_i18n('SQLITE_USER', 'User')); ?></th><th><?php echo sp_e(wp_i18n('ROLE', 'Role')); ?></th><th><?php echo sp_e(wp_i18n('NAME', 'Name')); ?></th></tr></thead><tbody>
                 <?php foreach ($roles as $row): ?>
                     <tr><td><?php echo sp_e($row['username']); ?></td><td><?php echo sp_e($row['role']); ?></td><td><?php echo sp_e($row['display_name']); ?></td></tr>
                 <?php endforeach; ?>
-                <?php if (empty($roles)): ?><tr><td colspan="3">Brak wpisów.</td></tr><?php endif; ?>
+                <?php if (empty($roles)): ?><tr><td colspan="3"><?php echo sp_e(wp_i18n('SQLITE_NO_ENTRIES', 'No entries.')); ?></td></tr><?php endif; ?>
                 </tbody></table>
             <?php endif; ?>
         </div>

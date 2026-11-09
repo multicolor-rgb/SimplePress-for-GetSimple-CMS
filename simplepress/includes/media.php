@@ -197,10 +197,10 @@ if (!function_exists('sp_media_library_upload')) {
         $thumb_path = defined('GSTHUMBNAILPATH') ? GSTHUMBNAILPATH : GSROOTPATH . 'data/thumbs/';
 
         if (!is_array($file) || !isset($file['error'])) {
-            return ['error' => 'Brak pliku.'];
+            return ['error' => wp_i18n('MEDIA_NO_FILE', 'No file.')];
         }
         if ((int) $file['error'] !== UPLOAD_ERR_OK) {
-            return ['error' => 'Nie udało się wgrać pliku.'];
+            return ['error' => wp_i18n('MEDIA_UPLOAD_ERROR', 'Error while uploading the file.')];
         }
         $upload_image_ext = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         $upload_ext = sp_media_library_upload_extensions();
@@ -208,17 +208,17 @@ if (!function_exists('sp_media_library_upload')) {
         $is_img = in_array($ext, $upload_image_ext, true);
 
         if ($kind === 'image' && !$is_img) {
-            return ['error' => 'Dozwolone są tylko obrazy JPG, PNG, GIF i WebP.'];
+            return ['error' => wp_i18n('MEDIA_ALLOWED_IMAGES', 'Only JPG, PNG, GIF and WebP images are allowed.')];
         }
         if (!$is_img && !in_array($ext, $upload_ext, true)) {
             return ['error' => 'Niedozwolony typ pliku.'];
         }
         $max_size = $is_img ? 8 * 1024 * 1024 : 20 * 1024 * 1024;
         if ((int) ($file['size'] ?? 0) > $max_size) {
-            return ['error' => 'Plik jest zbyt duży.'];
+            return ['error' => wp_i18n('MEDIA_TOO_LARGE', 'File is too large.')];
         }
         if ($is_img && function_exists('getimagesize') && !@getimagesize($file['tmp_name'])) {
-            return ['error' => 'Plik nie jest prawidłowym obrazem.'];
+            return ['error' => wp_i18n('MEDIA_NOT_IMAGE', 'The file is not a valid image.')];
         }
         if (function_exists('validate_safe_file') && !validate_safe_file($file['tmp_name'], $file['name'])) {
             return ['error' => 'Niedozwolony typ pliku.'];
@@ -243,10 +243,10 @@ if (!function_exists('sp_media_library_upload')) {
             @mkdir($upload_path, 0755, true);
         }
         if (function_exists('sp_path_within') && !sp_path_within(dirname($target), $upload_path, true)) {
-            return ['error' => 'Nieprawidłowa nazwa pliku.'];
+            return ['error' => wp_i18n('MEDIA_BAD_NAME', 'Invalid file name.')];
         }
         if (!move_uploaded_file($file['tmp_name'], $target)) {
-            return ['error' => 'Nie udało się zapisać pliku.'];
+            return ['error' => wp_i18n('MEDIA_SAVE_FAILED_MSG', 'Could not save the file.')];
         }
         @chmod($target, 0644);
         if (function_exists('sp_log')) {
@@ -281,7 +281,7 @@ if (!function_exists('wp_simple_media_ajax_handlers')) {
     function wp_simple_media_ajax_handlers() {
         if (is_frontend()) {
             if (isset($_GET['action']) && strpos((string) $_GET['action'], 'wp_simple_') === 0) {
-                sp_json(['status' => 'error', 'message' => 'Authentication required'], 403);
+                sp_json(['status' => 'error', 'message' => wp_i18n('ERROR_AUTH', 'Authentication required.')], 403);
             }
             return;
         }
@@ -347,10 +347,10 @@ if (!function_exists('wp_simple_media_ajax_handlers')) {
             while (ob_get_level()) { @ob_end_clean(); }
             sp_require_authenticated(true);
             if (!sp_verify_nonce('media_upload', $_POST['sp_nonce'] ?? '')) {
-                sp_json(['status' => 'error', 'message' => 'Nieprawidłowy token bezpieczeństwa.'], 403);
+                sp_json(['status' => 'error', 'message' => wp_i18n('MEDIA_BAD_NONCE', 'Invalid security token.')], 403);
             }
             if (!isset($_FILES['file'])) {
-                sp_json(['status' => 'error', 'message' => 'Brak pliku'], 400);
+                sp_json(['status' => 'error', 'message' => wp_i18n('MEDIA_NO_FILE', 'No file.')], 400);
             }
 
             $upload_path = defined('GSDATAUPLOADPATH') ? GSDATAUPLOADPATH : GSROOTPATH . 'data/uploads/';
@@ -360,17 +360,17 @@ if (!function_exists('wp_simple_media_ajax_handlers')) {
             $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
             if ($file['error'] !== UPLOAD_ERR_OK || $file['size'] > 8 * 1024 * 1024 || !in_array($ext, $allowed, true) || !@getimagesize($file['tmp_name'])) {
-                sp_json(['status' => 'error', 'message' => 'Dozwolone są tylko obrazy JPG, PNG, GIF i WebP (do 8 MB).'], 400);
+                sp_json(['status' => 'error', 'message' => wp_i18n('MEDIA_ALLOWED_IMAGES_8MB', 'Only JPG, PNG, GIF and WebP images are allowed (up to 8 MB).')], 400);
             }
             if (function_exists('validate_safe_file') && !validate_safe_file($file['tmp_name'], $file['name'])) {
-                sp_json(['status' => 'error', 'message' => 'Niedozwolony typ pliku.'], 400);
+                sp_json(['status' => 'error', 'message' => wp_i18n('MEDIA_DISALLOWED_TYPE', 'Disallowed file type.')], 400);
             }
             $clean_base = function_exists('clean_img_name') ? clean_img_name(to7bit(pathinfo($file['name'], PATHINFO_FILENAME))) : preg_replace('/[^a-zA-Z0-9_-]/', '', pathinfo($file['name'], PATHINFO_FILENAME));
             $clean_base = $clean_base !== '' ? $clean_base : 'image';
             $final_name = $clean_base . '-' . bin2hex(random_bytes(4)) . '.' . $ext;
             $target = $upload_path . $final_name;
             if (!sp_path_within(dirname($target), $upload_path, true)) {
-                sp_json(['status' => 'error', 'message' => 'Nieprawidłowa nazwa pliku.'], 400);
+                sp_json(['status' => 'error', 'message' => wp_i18n('MEDIA_BAD_NAME', 'Invalid file name.')], 400);
             }
 
             if (move_uploaded_file($file['tmp_name'], $target)) {
@@ -397,7 +397,7 @@ if (!function_exists('wp_simple_media_ajax_handlers')) {
                     ]
                 ]);
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Błąd zapisu pliku']);
+                echo json_encode(['status' => 'error', 'message' => wp_i18n('MEDIA_SAVE_FILE_ERROR', 'Error saving the file')]);
             }
             exit;
         }
@@ -408,32 +408,32 @@ if (!function_exists('wp_simple_media_ajax_handlers')) {
             while (ob_get_level()) { @ob_end_clean(); }
             sp_require_authenticated(true);
             if (!sp_verify_nonce('media_crop', $_SERVER['HTTP_X_SIMPLEPRESS_NONCE'] ?? ($_POST['sp_nonce'] ?? ''))) {
-                sp_json(['status' => 'error', 'message' => 'Nieprawidłowy token bezpieczeństwa.'], 403);
+                sp_json(['status' => 'error', 'message' => wp_i18n('MEDIA_BAD_NONCE', 'Invalid security token.')], 403);
             }
 
             $data = json_decode(file_get_contents('php://input'), true);
             if (!$data || empty($data['image']) || empty($data['filename'])) {
-                sp_json(['status' => 'error', 'message' => 'Błędne dane'], 400);
+                sp_json(['status' => 'error', 'message' => wp_i18n('MEDIA_BAD_DATA', 'Invalid data')], 400);
             }
 
             $upload_path = defined('GSDATAUPLOADPATH') ? GSDATAUPLOADPATH : GSROOTPATH . 'data/uploads/';
             $original_name = sp_safe_basename($data['filename']);
             $ext = strtolower(pathinfo((string) $original_name, PATHINFO_EXTENSION));
             if (!$original_name || !in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'], true)) {
-                sp_json(['status' => 'error', 'message' => 'Nieprawidłowy plik.'], 400);
+                sp_json(['status' => 'error', 'message' => wp_i18n('MEDIA_BAD_FILE', 'Invalid file.')], 400);
             }
             $source = $upload_path . $original_name;
             if (!is_file($source) || !sp_path_within($source, $upload_path, true)) {
-                sp_json(['status' => 'error', 'message' => 'Plik źródłowy nie istnieje.'], 404);
+                sp_json(['status' => 'error', 'message' => wp_i18n('MEDIA_SOURCE_MISSING', 'Source file does not exist.')], 404);
             }
             $img_parts = explode(';base64,', $data['image']);
             if (count($img_parts) < 2) {
-                sp_json(['status' => 'error', 'message' => 'Błędny format danych'], 400);
+                sp_json(['status' => 'error', 'message' => wp_i18n('MEDIA_BAD_FORMAT', 'Invalid data format')], 400);
             }
             $binary = base64_decode($img_parts[1], true);
             $image = $binary !== false ? @imagecreatefromstring($binary) : false;
             if (!$image) {
-                sp_json(['status' => 'error', 'message' => 'Błędne dane obrazu.'], 400);
+                sp_json(['status' => 'error', 'message' => wp_i18n('MEDIA_BAD_IMAGE', 'Invalid image data.')], 400);
             }
             $base_name = pathinfo($original_name, PATHINFO_FILENAME);
             $new_name = $base_name . '-edited-' . bin2hex(random_bytes(4)) . '.jpg';
@@ -446,7 +446,7 @@ if (!function_exists('wp_simple_media_ajax_handlers')) {
                 sp_log('media_crop', $new_name);
                 sp_json(['status' => 'success', 'new_filename' => $new_name]);
             }
-            sp_json(['status' => 'error', 'message' => 'Nie udało się zapisać nowego pliku'], 500);
+            sp_json(['status' => 'error', 'message' => wp_i18n('MEDIA_SAVE_NEW_ERROR', 'Could not save the new file.')], 500);
         }
     }
     add_action('common', 'wp_simple_media_ajax_handlers');
@@ -1034,39 +1034,77 @@ if (!function_exists('wp_simple_render_upload_page_script')) {
     function wp_simple_render_upload_page_script() {
         if (function_exists('get_filename_id') && get_filename_id() !== 'upload') { return; }
         $media_labels = [
-            'library' => wp_i18n('MEDIA_LIBRARY', 'Biblioteka mediów'),
-            'add' => wp_i18n('MEDIA_ADD', 'Dodaj media'),
-            'search' => wp_i18n('MEDIA_SEARCH', 'Szukaj mediów...'),
-            'filter' => wp_i18n('MEDIA_FILTER', 'Filtruj widok'),
-            'all' => wp_i18n('MEDIA_ALL', 'Wszystkie media'),
-            'images' => wp_i18n('MEDIA_IMAGES', 'Zdjęcia i grafiki'),
-            'files' => wp_i18n('MEDIA_FILES', 'Dokumenty i inne'),
-            'visible' => wp_i18n('MEDIA_VISIBLE', 'Widoczne:'),
-            'empty' => wp_i18n('MEDIA_EMPTY', 'Nie znaleziono mediów.'),
-            'drop' => wp_i18n('MEDIA_DROP', 'Upuść pliki tutaj'),
-            'or_click' => wp_i18n('MEDIA_OR_CLICK', 'lub kliknij, aby wybrać'),
+            'library' => wp_i18n('MEDIA_LIBRARY', 'Media Library'),
+            'add' => wp_i18n('MEDIA_ADD', 'Add media'),
+            'search' => wp_i18n('MEDIA_SEARCH', 'Search media...'),
+            'filter' => wp_i18n('MEDIA_FILTER', 'Filter view'),
+            'all' => wp_i18n('MEDIA_ALL', 'All media'),
+            'images' => wp_i18n('MEDIA_IMAGES', 'Images'),
+            'files' => wp_i18n('MEDIA_FILES', 'Documents and other'),
+            'visible' => wp_i18n('MEDIA_VISIBLE', 'Visible:'),
+            'empty' => wp_i18n('MEDIA_EMPTY', 'No media found.'),
+            'drop' => wp_i18n('MEDIA_DROP', 'Drop files here'),
+            'or_click' => wp_i18n('MEDIA_OR_CLICK', 'or click to choose'),
+            'crop_title' => wp_i18n('MEDIA_CROP_TITLE', 'Crop:'),
+            'rotate_left' => wp_i18n('MEDIA_ROTATE_LEFT', 'Rotate 90° left'),
+            'rotate_right' => wp_i18n('MEDIA_ROTATE_RIGHT', 'Rotate 90° right'),
+            'flip' => wp_i18n('MEDIA_FLIP', 'Flip horizontally'),
+            'flip_short' => wp_i18n('MEDIA_FLIP_SHORT', 'Flip'),
+            'aspect' => wp_i18n('MEDIA_ASPECT', 'Aspect ratio'),
+            'aspect_any' => wp_i18n('MEDIA_ASPECT_ANY', 'Any'),
+            'aspect_square' => wp_i18n('MEDIA_ASPECT_SQUARE', '1:1 (Square)'),
+            'aspect_wide' => wp_i18n('MEDIA_ASPECT_WIDE', '16:9 (Wide)'),
+            'aspect_standard' => wp_i18n('MEDIA_ASPECT_STANDARD', '4:3 (Standard)'),
+            'cancel' => wp_i18n('MEDIA_CANCEL', 'Cancel'),
+            'save_new' => wp_i18n('MEDIA_SAVE_NEW', 'Save as new file'),
+            'saving_new' => wp_i18n('MEDIA_SAVING_NEW', 'Saving new version...'),
+            'crop_error' => wp_i18n('MEDIA_SAVE_CROP_ERROR', 'Could not generate the image crop.'),
+            'save_error' => wp_i18n('MEDIA_SAVE_ERROR', 'Error: %s'),
+            'save_failed' => wp_i18n('MEDIA_SAVE_FAILED', 'Failed'),
+            'network_save_error' => wp_i18n('MEDIA_NETWORK_SAVE_ERROR', 'Network error while saving.'),
+            'upload_error' => wp_i18n('MEDIA_UPLOAD_ERROR', 'Error while uploading the file.'),
+            'save_file_error' => wp_i18n('MEDIA_SAVE_FILE_ERROR', 'Error saving the file'),
+            'enlarge' => wp_i18n('MEDIA_ENLARGE', 'Enlarge / preview full image'),
+            'open_file' => wp_i18n('MEDIA_OPEN_FILE', 'Open file'),
+            'view' => wp_i18n('MEDIA_VIEW', 'Preview'),
+            'crop_edit' => wp_i18n('MEDIA_CROP_EDIT', 'Crop / Edit'),
+            'download' => wp_i18n('MEDIA_DOWNLOAD', 'Download'),
+            'delete_file' => wp_i18n('MEDIA_DELETE_FILE', 'Delete file'),
+            'delete_confirm' => wp_i18n('MEDIA_DELETE_CONFIRM', 'Are you sure you want to delete file %s?'),
+            'insert_content' => wp_i18n('MEDIA_INSERT_CONTENT', 'Insert into content'),
+            'drop_file' => wp_i18n('MEDIA_DROP_FILE', 'Drop file here'),
+            'library_tab' => wp_i18n('MEDIA_LIBRARY_TAB', 'Media library'),
+            'upload_tab' => wp_i18n('MEDIA_UPLOAD_TAB', 'Upload file'),
+            'modal_title' => wp_i18n('MEDIA_MODAL_TITLE', 'Choose or upload media'),
+            'insert' => wp_i18n('MEDIA_INSERT', 'Insert'),
+            'loading' => wp_i18n('MEDIA_LOADING', 'Loading...'),
+            'library_loading' => wp_i18n('MEDIA_LIBRARY_LOADING', 'Loading library...'),
+            'list_error' => wp_i18n('MEDIA_LIST_ERROR', 'Could not load the list.'),
+            'no_uploads' => wp_i18n('MEDIA_NO_UPLOADS', 'No files in uploads.'),
+            'no_files' => wp_i18n('MEDIA_NO_FILES', 'No media found.'),
+            'save_success' => wp_i18n('MEDIA_SAVE_SUCCESS', 'Saved successfully.'),
         ];
         ?>
         <div id="wp-crop-modal">
             <div class="wp-crop-box">
                 <div class="wp-crop-toolbar">
-                    <strong style="font-size:14px;">Edycja kadr: <span id="wp-crop-filename" style="font-weight:normal; color:var(--wp-text-muted);"></span></strong>
+                    <strong style="font-size:14px;"><?php echo sp_e(wp_i18n('MEDIA_CROP_TITLE', 'Crop:')); ?> <span id="wp-crop-filename" style="font-weight:normal; color:var(--wp-text-muted);"></span></strong>
                     <div style="display:flex; gap:6px;">
-                        <button type="button" class="button" id="crop-rotate-left" title="Obróć o 90° w lewo">↺ 90°</button>
-                        <button type="button" class="button" id="crop-rotate-right" title="Obróć o 90° w prawo">↻ 90°</button>
-                        <button type="button" class="button" id="crop-flip-x" title="Odbicie lustrzane">↔ Odbij</button>
+                        <button type="button" class="button" id="crop-rotate-left" title="<?php echo sp_e(wp_i18n('MEDIA_ROTATE_LEFT', 'Rotate 90° left')); ?>">↺ 90°</button>
+                        <button type="button" class="button" id="crop-rotate-right" title="<?php echo sp_e(wp_i18n('MEDIA_ROTATE_RIGHT', 'Rotate 90° right')); ?>">↻ 90°</button>
+                        <button type="button" class="button" id="crop-flip-x" title="<?php echo sp_e(wp_i18n('MEDIA_FLIP', 'Flip horizontally')); ?>">↔ <?php echo sp_e(wp_i18n('MEDIA_FLIP_SHORT', 'Flip')); ?></button>
                         <select id="crop-aspect-ratio" class="button" style="height:30px;">
-                            <option value="NaN">Proporcja: Dowolna</option>
-                            <option value="1">1:1 (Kwadrat)</option>
-                            <option value="1.77777777778">16:9 (Panorama)</option>
-                            <option value="1.33333333333">4:3 (Standard)</option>
+                            <option value="NaN"><?php echo sp_e(wp_i18n('MEDIA_ASPECT', 'Aspect ratio')); ?>: <?php echo sp_e(wp_i18n('MEDIA_ASPECT_ANY', 'Any')); ?></option>
+                            <option value="1"><?php echo sp_e(wp_i18n('MEDIA_ASPECT_SQUARE', '1:1 (Square)')); ?></option>
+                            <option value="1.77777777778"><?php echo sp_e(wp_i18n('MEDIA_ASPECT_WIDE', '16:9 (Wide)')); ?></option>
+                            <option value="1.33333333333"><?php echo sp_e(wp_i18n('MEDIA_ASPECT_STANDARD', '4:3 (Standard)')); ?></option>
                         </select>
                     </div>
                 </div>
                 <div class="wp-crop-body" id="wp-crop-body-container"></div>
                 <div style="padding: 12px 18px; background: var(--wp-card-bg); border-top: 1px solid var(--wp-border); display: flex; justify-content: flex-end; gap: 10px;">
-                    <button type="button" class="button" id="wp-crop-cancel">Anuluj</button>
-                    <button type="button" class="button button-primary" id="wp-crop-save">Zapisz jako nowy plik</button>
+                    <button type="button" class="button" id="wp-crop-cancel"><?php echo sp_e(wp_i18n('MEDIA_CANCEL', 'Cancel')); ?></button>
+                    <button type="button" class="button button-primary" id="wp-crop-save"><?php echo sp_e(wp_i18n('MEDIA_SAVE_NEW', 'Save as new file')); ?></button>
                 </div>
             </div>
         </div>
@@ -1211,7 +1249,7 @@ if (!function_exists('wp_simple_render_upload_page_script')) {
                     };
 
                     xhr.onerror = function() {
-                        alert("Błąd podczas wgrywania pliku.");
+                        alert(mLabels.upload_error);
                         pWrap.style.display = "none";
                     };
 
@@ -1253,17 +1291,18 @@ if (!function_exists('wp_simple_render_upload_page_script')) {
                     card.dataset.type = f.isImg ? "image" : "file";
 
                     var previewHtml = f.isImg
-                        ? `<a href="${f.url}" target="_blank" class="wp-media-thumb-link" title="Powiększ / podgląd pełnego zdjęcia">
+                        ? `<a href="${f.url}" target="_blank" class="wp-media-thumb-link" title="${mLabels.enlarge}">
                              <img src="${f.thumb}" class="wp-media-thumb" loading="lazy" alt="${f.name}" onerror="this.src='${f.url}'">
                            </a>`
-                        : `<a href="${f.url}" target="_blank" class="wp-media-thumb-link" title="Otwórz plik">
+                        : `<a href="${f.url}" target="_blank" class="wp-media-thumb-link" title="${mLabels.open_file}">
                              <div class="wp-media-icon">${f.ext}</div>
                            </a>`;
 
-                    var viewBtn = `<a href="${f.url}" target="_blank" class="wp-action-btn" title="Podgląd">${icons.view}</a>`;
-                    var editBtn = f.isImg ? `<a class="wp-action-btn wp-crop-btn" data-url="${f.url}" data-name="${f.name}" title="Przytnij / Edytuj">${icons.crop}</a>` : '';
-                    var dlBtn = `<a href="${f.url}" download="${f.name}" class="wp-action-btn" title="Pobierz">${icons.download}</a>`;
-                    var delBtn = f.delHref ? `<a href="${f.delHref}" class="wp-action-btn delete-btn" title="Usuń plik" onclick="return confirm('Czy na pewno usunąć plik ${f.name}?');">${icons.trash}</a>` : '';
+                    var viewBtn = `<a href="${f.url}" target="_blank" class="wp-action-btn" title="${mLabels.view}">${icons.view}</a>`;
+                    var editBtn = f.isImg ? `<a class="wp-action-btn wp-crop-btn" data-url="${f.url}" data-name="${f.name}" title="${mLabels.crop_edit}">${icons.crop}</a>` : '';
+                    var dlBtn = `<a href="${f.url}" download="${f.name}" class="wp-action-btn" title="${mLabels.download}">${icons.download}</a>`;
+                    var deleteMsg = mLabels.delete_confirm.replace('%s', f.name).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+                    var delBtn = f.delHref ? `<a href="${f.delHref}" class="wp-action-btn delete-btn" title="${mLabels.delete_file}" onclick="return confirm('${deleteMsg}');">${icons.trash}</a>` : '';
 
                     card.innerHTML = `
                         ${previewHtml}
@@ -1408,14 +1447,14 @@ if (!function_exists('wp_simple_render_upload_page_script')) {
                     if (!cropper) return;
                     var saveBtn = this;
                     saveBtn.disabled = true;
-                    saveBtn.textContent = "Zapisywanie nowej wersji...";
+                    saveBtn.textContent = mLabels.saving_new;
 
                     try {
                         var canvas = cropper.getCroppedCanvas();
                         if (!canvas) {
-                            alert("Nie udało się wygenerować wycinka obrazu.");
+                            alert(mLabels.crop_error);
                             saveBtn.disabled = false;
-                            saveBtn.textContent = "Zapisz jako nowy plik";
+                            saveBtn.textContent = mLabels.save_new;
                             return;
                         }
                         var base64Data = canvas.toDataURL("image/jpeg", 0.93);
@@ -1430,20 +1469,20 @@ if (!function_exists('wp_simple_render_upload_page_script')) {
                             if (res.status === "success") { 
                                 window.location.reload(); 
                             } else { 
-                                alert("Błąd: " + (res.message || "Niepowodzenie")); 
+                                alert(mLabels.save_error.replace('%s', res.message || mLabels.save_failed)); 
                                 saveBtn.disabled = false; 
-                                saveBtn.textContent = "Zapisz jako nowy plik"; 
+                                saveBtn.textContent = mLabels.save_new; 
                             }
                         })
                         .catch(() => { 
-                            alert("Błąd sieciowy przy zapisie."); 
+                            alert(mLabels.network_save_error); 
                             saveBtn.disabled = false; 
-                            saveBtn.textContent = "Zapisz jako nowy plik"; 
+                            saveBtn.textContent = mLabels.save_new; 
                         });
                     } catch(err) {
-                        alert("Błąd: " + err.message);
+                        alert(mLabels.save_error.replace('%s', err.message));
                         saveBtn.disabled = false;
-                        saveBtn.textContent = "Zapisz jako nowy plik";
+                        saveBtn.textContent = mLabels.save_new;
                     }
                 });
             }
@@ -1469,7 +1508,7 @@ if (!function_exists('wp_simple_render_edit_media_modal')) {
         <div id="wp-media-btn-container" style="margin: 12px 0; clear: both;">
             <button type="button" id="wp-btn-open-media" class="button" style="display:inline-flex; align-items:center; gap:6px; font-weight:600; cursor:pointer;">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
-                Dodaj medium
+                <?php echo sp_e(wp_i18n('MEDIA_ADD_MEDIA', 'Add media')); ?>
             </button>
         </div>
 
@@ -1477,18 +1516,18 @@ if (!function_exists('wp_simple_render_edit_media_modal')) {
             <div style="background: var(--wp-card-bg); width:880px; max-width:95%; height:620px; max-height:90vh; border-radius:6px; box-shadow:0 5px 25px rgba(0,0,0,0.3); display:flex; flex-direction:column; overflow:hidden;">
                 
                 <div style="padding:14px 20px; border-bottom: 1px solid var(--wp-border); display:flex; justify-content:space-between; align-items:center; background:var(--wp-surface-alt);">
-                    <h3 style="margin:0 !important; font-size:16px; font-weight:600; color:var(--wp-text-strong);">Wybierz lub wgraj medium</h3>
+                    <h3 style="margin:0 !important; font-size:16px; font-weight:600; color:var(--wp-text-strong);"><?php echo sp_e(wp_i18n('MEDIA_MODAL_TITLE', 'Choose or upload media')); ?></h3>
                     <button type="button" id="wp-media-close" style="border:none; background:none; font-size:24px; line-height:1; cursor:pointer; color:var(--wp-text-muted);">&times;</button>
                 </div>
 
                 <div class="wp-modal-tabs">
-                    <button type="button" class="wp-modal-tab active" id="tab-btn-library">Biblioteka mediów</button>
-                    <button type="button" class="wp-modal-tab" id="tab-btn-upload">Wgraj plik</button>
+                    <button type="button" class="wp-modal-tab active" id="tab-btn-library"><?php echo sp_e(wp_i18n('MEDIA_LIBRARY_TAB', 'Media library')); ?></button>
+                    <button type="button" class="wp-modal-tab" id="tab-btn-upload"><?php echo sp_e(wp_i18n('MEDIA_UPLOAD_TAB', 'Upload file')); ?></button>
                 </div>
 
                 <div id="wp-tab-content-library" style="flex:1; overflow-y:auto; padding:18px 20px; background:var(--wp-content-bg);">
                     <div id="wp-modal-list" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(115px, 1fr)); gap:12px;">
-                        Wczytywanie...
+                        <?php echo sp_e(wp_i18n('MEDIA_LOADING', 'Loading...')); ?>
                     </div>
                 </div>
 
@@ -1498,8 +1537,8 @@ if (!function_exists('wp_simple_render_edit_media_modal')) {
                         <div style="display:flex; justify-content:center; margin-bottom:10px;">
                             <svg viewBox="0 0 24 24" width="46" height="46" fill="var(--wp-blue)"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
                         </div>
-                        <h4 style="margin:0 0 6px 0; font-size:15px; color:var(--wp-text-strong);">Upuść plik tutaj</h4>
-                        <p style="margin:0; font-size:12px; color:var(--wp-text-muted);">lub kliknij, aby wybrać z dysku</p>
+                        <h4 style="margin:0 0 6px 0; font-size:15px; color:var(--wp-text-strong);"><?php echo sp_e(wp_i18n('MEDIA_DROP_FILE', 'Drop file here')); ?></h4>
+                        <p style="margin:0; font-size:12px; color:var(--wp-text-muted);"><?php echo sp_e(wp_i18n('MEDIA_OR_CLICK', 'or click to choose')); ?></p>
                         <div class="wp-side-progress-wrap" id="wp-modal-pwrap" style="max-width:280px; margin:15px auto 0;">
                             <div class="wp-side-progress-bar" id="wp-modal-pbar"></div>
                         </div>
@@ -1507,8 +1546,8 @@ if (!function_exists('wp_simple_render_edit_media_modal')) {
                 </div>
 
                 <div style="padding:12px 20px; border-top: 1px solid var(--wp-border); background: var(--wp-card-bg); display:flex; justify-content:flex-end; gap:10px;">
-                    <button type="button" id="wp-media-cancel" class="button" style="padding:6px 14px; cursor:pointer;">Anuluj</button>
-                    <button type="button" id="wp-media-insert" class="button button-primary" style="padding:6px 14px; cursor:pointer;" disabled>Wstaw do treści</button>
+                    <button type="button" id="wp-media-cancel" class="button" style="padding:6px 14px; cursor:pointer;"><?php echo sp_e(wp_i18n('MEDIA_CANCEL', 'Cancel')); ?></button>
+                    <button type="button" id="wp-media-insert" class="button button-primary" style="padding:6px 14px; cursor:pointer;" disabled><?php echo sp_e(wp_i18n('MEDIA_INSERT_CONTENT', 'Insert into content')); ?></button>
                 </div>
             </div>
         </div>
@@ -1552,7 +1591,7 @@ if (!function_exists('wp_simple_render_edit_media_modal')) {
             });
 
             function loadLibrary(autoSelectName) {
-                modalList.innerHTML = "<p style='grid-column: 1/-1; text-align:center;'>Wczytywanie biblioteki...</p>";
+                modalList.innerHTML = "<p style='grid-column: 1/-1; text-align:center;'>" + mLabels.library_loading + "</p>";
                 insertBtn.disabled = true;
 
                 fetch("upload.php?action=wp_simple_media_list")
@@ -1560,7 +1599,7 @@ if (!function_exists('wp_simple_render_edit_media_modal')) {
                     .then(data => {
                         modalList.innerHTML = "";
                         if (!data.files || data.files.length === 0) {
-                            modalList.innerHTML = "<p style='grid-column: 1/-1; text-align:center;'>Brak plików w uploads.</p>";
+                            modalList.innerHTML = "<p style='grid-column: 1/-1; text-align:center;'>" + mLabels.no_uploads + "</p>";
                             return;
                         }
 
@@ -1591,7 +1630,7 @@ if (!function_exists('wp_simple_render_edit_media_modal')) {
                         });
                     })
                     .catch(() => {
-                        modalList.innerHTML = "<p style='grid-column: 1/-1; text-align:center; color:var(--wp-danger);'>Błąd pobierania listy.</p>";
+                        modalList.innerHTML = "<p style='grid-column: 1/-1; text-align:center; color:var(--wp-danger);'>" + mLabels.list_error + "</p>";
                     });
             }
 
@@ -1633,11 +1672,11 @@ if (!function_exists('wp_simple_render_edit_media_modal')) {
                             tabLib.click();
                             loadLibrary(res.file.name);
                         } else {
-                            alert("Błąd: " + res.message);
+                            alert(mLabels.save_error.replace('%s', res.message));
                             pWrap.style.display = "none";
                         }
                     } catch(err) {
-                        alert("Błąd zapisu");
+                        alert(mLabels.save_file_error);
                         pWrap.style.display = "none";
                     }
                 };

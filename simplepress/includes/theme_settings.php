@@ -737,7 +737,7 @@ if (!function_exists('wp_simple_theme_settings_view')) {
         sp_require_admin();
         $theme = sp_active_theme();
         if (!$theme) {
-            echo '<div class="wrap"><div class="notice notice-warning"><p>Brak aktywnego motywu.</p></div></div>';
+            echo '<div class="wrap"><div class="notice notice-warning"><p>' . sp_e(wp_i18n('THEME_NO_ACTIVE', 'No active theme.')) . '</p></div></div>';
             return;
         }
 
@@ -786,23 +786,23 @@ if (!function_exists('wp_simple_theme_settings_view')) {
         ?>
         <div class="wrap">
             <?php wp_simple_render_subtabs(); ?>
-            <h1><?php echo sp_e(wp_i18n('TAB_THEME', 'Ustawienia motywu')); ?></h1>
-            <?php if (isset($_GET['saved'])): ?><div class="notice notice-success"><p>Ustawienie zostało zapisane.</p></div><?php endif; ?>
-            <?php if (isset($_GET['deleted'])): ?><div class="notice notice-success"><p>Ustawienie zostało usunięte.</p></div><?php endif; ?>
-            <?php if (isset($_GET['error'])): ?><div class="notice notice-error"><p>Ten klucz jest już zarejestrowany w kodzie motywu albo jest nieprawidłowy.</p></div><?php endif; ?>
-            <p>Aktywny motyw: <strong><?php echo sp_e($theme); ?></strong></p>
+            <h1><?php echo sp_e(wp_i18n('THEME_TITLE', 'Theme settings')); ?></h1>
+            <?php if (isset($_GET['saved'])): ?><div class="notice notice-success"><p><?php echo sp_e(wp_i18n('THEME_SAVED', 'Setting saved.')); ?></p></div><?php endif; ?>
+            <?php if (isset($_GET['deleted'])): ?><div class="notice notice-success"><p><?php echo sp_e(wp_i18n('THEME_DELETED', 'Setting deleted.')); ?></p></div><?php endif; ?>
+            <?php if (isset($_GET['error'])): ?><div class="notice notice-error"><p><?php echo sp_e(wp_i18n('THEME_DUPLICATE_KEY', 'This key is already registered in the theme code or is invalid.')); ?></p></div><?php endif; ?>
+            <p><?php echo sp_e(wp_i18n('THEME_ACTIVE', 'Active theme:')); ?> <strong><?php echo sp_e($theme); ?></strong></p>
             <p>
-                <a class="button button-primary" href="<?php echo sp_e(rtrim((string) ($GLOBALS['SITEURL'] ?? ''), '/') . '/?sp_customizer=1'); ?>" target="_blank" rel="noopener"><?php echo sp_e(wp_i18n('FE_CUSTOMIZE', 'Dostosuj na stronie')); ?></a>
+                <a class="button button-primary" href="<?php echo sp_e(rtrim((string) ($GLOBALS['SITEURL'] ?? ''), '/') . '/?sp_customizer=1'); ?>" target="_blank" rel="noopener"><?php echo sp_e(wp_i18n('FE_CUSTOMIZE', 'Customize on site')); ?></a>
             </p>
 
             <div class="postbox">
-                <div class="postbox-header"><h2>Ustawienia motywu</h2></div>
+                <div class="postbox-header"><h2><?php echo sp_e(wp_i18n('THEME_TITLE', 'Theme settings')); ?></h2></div>
                 <div class="inside">
                     <?php if (!$defs): ?>
-                    <p>Ten motyw nie ma jeszcze zdefiniowanych ustawień.</p>
+                    <p><?php echo sp_e(wp_i18n('THEME_EMPTY', 'This theme has no settings yet.')); ?></p>
                     <?php else: ?>
                     <table class="widefat">
-                        <thead><tr><th>Sekcja</th><th>Nazwa</th><th>Klucz</th><th>Typ</th><th>Źródło</th><th></th></tr></thead>
+                        <thead><tr><th><?php echo sp_e(wp_i18n('THEME_SECTION', 'Section')); ?></th><th><?php echo sp_e(wp_i18n('THEME_LABEL', 'Label')); ?></th><th><?php echo sp_e(wp_i18n('THEME_KEY', 'Key')); ?></th><th><?php echo sp_e(wp_i18n('THEME_TYPE', 'Type')); ?></th><th><?php echo sp_e(wp_i18n('THEME_SOURCE', 'Source')); ?></th><th></th></tr></thead>
                         <tbody>
                         <?php foreach ($defs as $key => $def): $source = $def['source'] ?? 'db'; ?>
                         <tr>
@@ -810,14 +810,14 @@ if (!function_exists('wp_simple_theme_settings_view')) {
                             <td><strong><?php echo sp_e($def['label']); ?></strong></td>
                             <td><code><?php echo sp_e($key); ?></code></td>
                             <td><?php echo sp_e($def['type']); ?></td>
-                            <td><?php echo $source === 'theme' ? 'motyw (kod)' : sp_e($source); ?></td>
+                            <td><?php echo $source === 'theme' ? sp_e(wp_i18n('THEME_SOURCE_THEME', 'theme (code)')) : sp_e($source); ?></td>
                             <td>
                                 <?php if ($source !== 'theme'): ?>
-                                <form method="post" action="<?php echo sp_e(sp_admin_url('theme')); ?>" onsubmit="return confirm('Usunąć to ustawienie?');" style="margin:0">
+                                <form method="post" action="<?php echo sp_e(sp_admin_url('theme')); ?>" onsubmit="return confirm(<?php echo sp_e(sp_js(wp_i18n('THEME_DELETE_CONFIRM', 'Delete this setting?'))); ?>);" style="margin:0">
                                     <?php sp_nonce_field('delete_theme_def'); ?>
                                     <input type="hidden" name="sp_delete_theme_def" value="1">
                                     <input type="hidden" name="setting_key" value="<?php echo sp_e($key); ?>">
-                                    <button type="submit" class="button">Usuń</button>
+                                    <button type="submit" class="button"><?php echo sp_e(wp_i18n('THEME_DELETE', 'Delete')); ?></button>
                                 </form>
                                 <?php endif; ?>
                             </td>
@@ -830,22 +830,22 @@ if (!function_exists('wp_simple_theme_settings_view')) {
             </div>
 
             <div class="postbox">
-                <div class="postbox-header"><h2>Kreator ustawień</h2></div>
+                <div class="postbox-header"><h2><?php echo sp_e(wp_i18n('THEME_CREATOR', 'Settings creator')); ?></h2></div>
                 <div class="inside">
-                    <p class="description">Dodaj pole, które będzie dostępne w customizerze. Pola z kodu motywu są tylko do odczytu.</p>
+                    <p class="description"><?php echo sp_e(wp_i18n('THEME_CREATOR_HINT', 'Add a field that will be available in the customizer. Fields from the theme code are read-only.')); ?></p>
                     <form method="post" action="<?php echo sp_e(sp_admin_url('theme')); ?>">
                         <?php sp_nonce_field('save_theme_def'); ?>
                         <input type="hidden" name="sp_save_theme_def" value="1">
                         <table class="form-table">
-                            <tr><th><label for="sp-def-key">Klucz</label></th><td><input class="regular-text" id="sp-def-key" name="setting_key" required pattern="[a-zA-Z0-9._-]+"></td></tr>
-                            <tr><th><label for="sp-def-label">Nazwa</label></th><td><input class="regular-text" id="sp-def-label" name="label" required></td></tr>
-                            <tr><th><label for="sp-def-type">Typ</label></th><td>
+                            <tr><th><label for="sp-def-key"><?php echo sp_e(wp_i18n('THEME_KEY', 'Key')); ?></label></th><td><input class="regular-text" id="sp-def-key" name="setting_key" required pattern="[a-zA-Z0-9._-]+"></td></tr>
+                            <tr><th><label for="sp-def-label"><?php echo sp_e(wp_i18n('THEME_LABEL', 'Label')); ?></label></th><td><input class="regular-text" id="sp-def-label" name="label" required></td></tr>
+                            <tr><th><label for="sp-def-type"><?php echo sp_e(wp_i18n('THEME_TYPE', 'Type')); ?></label></th><td>
                                 <select id="sp-def-type" name="type">
                                     <option value="text">text</option>
                                     <option value="textarea">textarea</option>
                                     <option value="wysiwyg">wysiwyg</option>
                                     <option value="select">select</option>
-                                    <option value="dropdown">dropdown (alias select)</option>
+                                    <option value="dropdown">dropdown (<?php echo sp_e(wp_i18n('THEME_ALIAS_SELECT', 'alias select')); ?>)</option>
                                     <option value="radio">radio</option>
                                     <option value="button_group">button_group</option>
                                     <option value="checkbox_group">checkbox_group</option>
@@ -853,12 +853,12 @@ if (!function_exists('wp_simple_theme_settings_view')) {
                                     <option value="toggle">toggle</option>
                                     <option value="color">color</option>
                                     <option value="image">image</option>
-                                    <option value="media">media (alias image)</option>
+                                    <option value="media">media (<?php echo sp_e(wp_i18n('THEME_ALIAS_IMAGE', 'alias image')); ?>)</option>
                                     <option value="file">file</option>
-                                    <option value="link">link (strona / URL)</option>
-                                    <option value="page">page (slug strony)</option>
+                                    <option value="link">link (<?php echo sp_e(wp_i18n('THEME_PAGE_OR_URL', 'page / URL')); ?>)</option>
+                                    <option value="page">page (<?php echo sp_e(wp_i18n('THEME_PAGE_SLUG', 'page slug')); ?>)</option>
                                     <option value="gallery">gallery</option>
-                                    <option value="icon">icon (Dashicons)</option>
+                                    <option value="icon">icon (<?php echo sp_e(wp_i18n('THEME_DASHICONS', 'Dashicons')); ?>)</option>
                                     <option value="number">number</option>
                                     <option value="range">range</option>
                                     <option value="date">date</option>
@@ -868,25 +868,25 @@ if (!function_exists('wp_simple_theme_settings_view')) {
                                     <option value="url">url</option>
                                     <option value="tel">tel</option>
                                     <option value="code">code</option>
-                                    <option value="heading">heading (tylko UI)</option>
-                                    <option value="divider">divider (tylko UI)</option>
+                                    <option value="heading">heading (<?php echo sp_e(wp_i18n('THEME_UI_ONLY', 'UI only')); ?>)</option>
+                                    <option value="divider">divider (<?php echo sp_e(wp_i18n('THEME_UI_ONLY', 'UI only')); ?>)</option>
                                 </select>
                             </td></tr>
-                            <tr><th><label for="sp-def-default">Domyślna wartość</label></th><td><input class="regular-text" id="sp-def-default" name="default_value"></td></tr>
-                            <tr><th><label for="sp-def-section">Sekcja</label></th><td><input class="regular-text" id="sp-def-section" name="section" value="general"></td></tr>
-                            <tr><th><label for="sp-def-priority">Kolejność</label></th><td><input type="number" id="sp-def-priority" name="priority" value="10"></td></tr>
-                            <tr><th><label for="sp-def-options">Opcje</label></th><td><textarea id="sp-def-options" name="options" rows="4" class="large-text code" placeholder='[{"value":"light","label":"Jasny"}] lub linie: light|Jasny. Separatorem opcji jest || lub nowa linia.'></textarea></td></tr>
-                            <tr><th><label for="sp-def-args">Dodatkowe argumenty (JSON)</label></th><td><textarea id="sp-def-args" name="args" rows="4" class="large-text code" placeholder='{"accept":"image/*","source":"pages","multiple":true,"min":0,"max":100,"step":1,"include_private":false}'></textarea><p class="description">Opcjonalne. Np. <code>source</code> dla linku: <code>pages</code>, <code>menu</code> lub <code>all</code>.</p></td></tr>
+                            <tr><th><label for="sp-def-default"><?php echo sp_e(wp_i18n('THEME_DEFAULT_VALUE', 'Default value')); ?></label></th><td><input class="regular-text" id="sp-def-default" name="default_value"></td></tr>
+                            <tr><th><label for="sp-def-section"><?php echo sp_e(wp_i18n('THEME_SECTION', 'Section')); ?></label></th><td><input class="regular-text" id="sp-def-section" name="section" value="general"></td></tr>
+                            <tr><th><label for="sp-def-priority"><?php echo sp_e(wp_i18n('THEME_PRIORITY', 'Priority')); ?></label></th><td><input type="number" id="sp-def-priority" name="priority" value="10"></td></tr>
+                            <tr><th><label for="sp-def-options"><?php echo sp_e(wp_i18n('THEME_OPTIONS', 'Options')); ?></label></th><td><textarea id="sp-def-options" name="options" rows="4" class="large-text code" placeholder='<?php echo sp_e(wp_i18n('THEME_OPTIONS_PLACEHOLDER', '[{"value":"light","label":"Light"}] or lines: light|Light. Separate options with || or a new line.')); ?>'></textarea></td></tr>
+                            <tr><th><label for="sp-def-args"><?php echo sp_e(wp_i18n('THEME_ARGS', 'Additional arguments (JSON)')); ?></label></th><td><textarea id="sp-def-args" name="args" rows="4" class="large-text code" placeholder='{"accept":"image/*","source":"pages","multiple":true,"min":0,"max":100,"step":1,"include_private":false}'></textarea><p class="description"><?php echo wp_i18n('THEME_ARGS_HINT', 'Optional. E.g. <code>source</code> for a link: <code>pages</code>, <code>menu</code> or <code>all</code>.'); ?></p></td></tr>
                         </table>
-                        <p><button type="submit" class="button button-primary">Dodaj / zapisz ustawienie</button></p>
+                        <p><button type="submit" class="button button-primary"><?php echo sp_e(wp_i18n('THEME_ADD', 'Add setting')); ?></button></p>
                     </form>
                 </div>
             </div>
 
             <div class="postbox">
-                <div class="postbox-header"><h2>Kod PHP dla motywu</h2></div>
+                <div class="postbox-header"><h2><?php echo sp_e(wp_i18n('THEME_PHP_CODE', 'Theme PHP code')); ?></h2></div>
                 <div class="inside">
-                    <p class="description">Wklej do <code>functions.php</code> motywu, aby ustawienia były rejestrowane w kodzie.</p>
+                    <p class="description"><?php echo wp_i18n('THEME_PHP_HINT', 'Paste into the theme <code>functions.php</code> to register the settings in code.'); ?></p>
                     <textarea class="large-text code" rows="12" readonly><?php
                     $snippet = "if (function_exists('sp_customizer_add_setting')) {\n";
                     foreach ($defs as $key => $def) {

@@ -165,21 +165,21 @@ function wp_simple_snippets_view() {
 
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
                 <div>
-                    <h2 style="margin:0 !important;">Wycinki treści (Snippety)</h2>
+                    <h2 style="margin:0 !important;"><?php echo sp_e(wp_i18n('SNIPPETS_TITLE', 'Content snippets')); ?></h2>
                     <p style="color:var(--wp-text-muted); font-size:13px; margin:4px 0 0 0;">
-                        Aktywny edytor: <strong><?php echo ($active_editor === 'tinymce') ? 'TinyMCE' : 'CKEditor'; ?></strong>.
-                        Używaj wycinków w szablonach za pomocą <code>&lt;?php get_snippet("nazwa"); ?&gt;</code>.
+                        <?php echo sp_e(wp_i18n('SNIPPETS_ACTIVE_EDITOR', 'Active editor:')); ?> <strong><?php echo ($active_editor === 'tinymce') ? 'TinyMCE' : 'CKEditor'; ?></strong>.
+                        <?php echo wp_i18n('SNIPPETS_USAGE', 'Use snippets in templates with <code>&lt;?php get_snippet("name"); ?&gt;</code>.'); ?>
                     </p>
                 </div>
                 <button type="button" class="button button-primary" id="btn-add-snippet">
-                    <span class="dashicons dashicons-plus-alt2" style="vertical-align:middle; margin-top:-2px;"></span> Dodaj nowy snippet
+                    <span class="dashicons dashicons-plus-alt2" style="vertical-align:middle; margin-top:-2px;"></span> <?php echo sp_e(wp_i18n('SNIPPETS_ADD', 'Add snippet')); ?>
                 </button>
             </div>
 
             <?php if (isset($_GET['saved'])): ?>
-                <div class="updated"><p>Wszystkie snippety zostały pomyślnie zapisane.</p></div>
+                <div class="updated"><p><?php echo sp_e(wp_i18n('SNIPPETS_SAVED', 'All snippets saved successfully.')); ?></p></div>
             <?php elseif (isset($_GET['error'])): ?>
-                <div class="error"><p>Błąd zapisu pliku snippetów. Sprawdź uprawnienia do katalogu <code>data/other/</code>.</p></div>
+                <div class="error"><p><?php echo sp_e(sprintf(wp_i18n('SNIPPETS_SAVE_ERROR', 'Error saving the snippets file. Check permissions for directory %s.'), 'data/other/')); ?></p></div>
             <?php endif; ?>
 
             <form method="post" action="load.php?id=simplepress&amp;sub=snippets" id="snippets-form">
@@ -187,7 +187,7 @@ function wp_simple_snippets_view() {
                 <div id="snippets-container">
                     <?php if (empty($snippets)): ?>
                         <div id="no-snippets-notice" style="background: var(--wp-card-bg); border:1px dashed var(--wp-border); padding:30px; text-align:center; color:var(--wp-text-muted); border-radius:4px; margin-bottom:20px;">
-                            Brak zdefiniowanych snippetów. Kliknij przycisk powyżej, aby dodać pierwszy element.
+                            <?php echo sp_e(wp_i18n('SNIPPETS_EMPTY', 'No snippets yet. Add your first one below.')); ?>
                         </div>
                     <?php else: ?>
                         <?php foreach ($snippets as $index => $item): 
@@ -201,20 +201,20 @@ function wp_simple_snippets_view() {
                                         <span class="dashicons dashicons-shortcode" style="color:var(--wp-blue);"></span>
                                         <span class="snippet-code-badge">&lt;?php get_snippet("<?php echo $stitle; ?>"); ?&gt;</span>
                                         <button type="button" class="copy-snippet-btn" data-code='<?php echo '<?php get_snippet("' . $stitle . '"); ?>'; ?>'>
-                                            Kopiuj wywołanie
+                                            <?php echo sp_e(wp_i18n('SNIPPETS_COPY_CALL', 'Copy call')); ?>
                                         </button>
                                     </div>
                                     <button type="button" class="button btn-remove-snippet" onclick="removeSnippetCard(this, '<?php echo $unique_id; ?>');">
-                                        Usuń
+                                        <?php echo sp_e(wp_i18n('SNIPPETS_DELETE', 'Delete')); ?>
                                     </button>
                                 </div>
                                 <div class="snippet-body">
                                     <p style="margin:0 0 10px 0;">
-                                        <label style="display:block; font-weight:600; font-size:13px; margin-bottom:4px;">Identyfikator (tytuł):</label>
-                                        <input type="text" name="snippetTitle[]" value="<?php echo $stitle; ?>" required pattern="[a-zA-Z0-9_-]+" placeholder="np. stopka_kontakt" onkeyup="updateBadge(this);" style="width:100%; max-width:400px; padding:6px 10px; border: 1px solid var(--wp-input-border); border-radius:4px; font-family:monospace;">
+                                        <label style="display:block; font-weight:600; font-size:13px; margin-bottom:4px;"><?php echo sp_e(wp_i18n('SNIPPETS_ID', 'Identifier (title):')); ?></label>
+                                        <input type="text" name="snippetTitle[]" value="<?php echo $stitle; ?>" required pattern="[a-zA-Z0-9_-]+" placeholder="<?php echo sp_e(wp_i18n('SNIPPETS_PLACEHOLDER', 'e.g. footer_contact')); ?>" onkeyup="updateBadge(this);" style="width:100%; max-width:400px; padding:6px 10px; border: 1px solid var(--wp-input-border); border-radius:4px; font-family:monospace;">
                                     </p>
                                     <p style="margin:0;">
-                                        <label style="display:block; font-weight:600; font-size:13px; margin-bottom:4px;">Treść snippetu:</label>
+                                        <label style="display:block; font-weight:600; font-size:13px; margin-bottom:4px;"><?php echo sp_e(wp_i18n('SNIPPETS_CONTENT', 'Snippet content:')); ?></label>
                                         <textarea name="snippetContent[]" id="<?php echo $unique_id; ?>" class="snippet-editor-target" style="width:100%; height:260px;"><?php echo $scontent; ?></textarea>
                                     </p>
                                 </div>
@@ -224,13 +224,26 @@ function wp_simple_snippets_view() {
                 </div>
 
                 <p class="submit" style="margin-top:20px;">
-                    <input type="submit" name="wp_save_snippets" class="button button-primary button-hero" value="Zapisz wszystkie snippety">
+                    <input type="submit" name="wp_save_snippets" class="button button-primary button-hero" value="<?php echo sp_e(wp_i18n('SNIPPETS_SAVE_ALL', 'Save all snippets')); ?>">
                 </p>
             </form>
         </div>
     </div>
 
     <script>
+    var snippetI18n = <?php echo json_encode([
+        'delete' => wp_i18n('SNIPPETS_DELETE', 'Delete'),
+        'id' => wp_i18n('SNIPPETS_ID', 'Identifier (title):'),
+        'content' => wp_i18n('SNIPPETS_CONTENT', 'Snippet content:'),
+        'placeholder' => wp_i18n('SNIPPETS_PLACEHOLDER_NEW', 'e.g. sidebar_banner'),
+        'defaultId' => wp_i18n('SNIPPETS_DEFAULT_ID', 'identifier'),
+        'copied' => wp_i18n('SNIPPETS_COPIED', 'Copied!'),
+        'deleteConfirm' => wp_i18n('SNIPPETS_DELETE_CONFIRM', 'Are you sure you want to delete this snippet?'),
+        'serverError' => wp_i18n('SNIPPETS_SERVER_ERROR', 'Server error:'),
+        'badJson' => wp_i18n('SNIPPETS_BAD_JSON', 'Invalid JSON response.'),
+        'parseError' => wp_i18n('SNIPPETS_PARSE_ERROR', 'Error parsing the server response.'),
+        'networkError' => wp_i18n('SNIPPETS_NETWORK_ERROR', 'Network error while sending.'),
+    ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
     var currentActiveEditor = "<?php echo $active_editor; ?>";
     var tinymceToolbar = <?php echo json_encode($tinymce_toolbar); ?>;
     var snippetCounter = <?php echo count($snippets); ?>;
@@ -247,22 +260,22 @@ function wp_simple_snippets_view() {
 
             xhr.onload = function () {
                 if (xhr.status < 200 || xhr.status >= 300) {
-                    reject('Błąd serwera: ' + xhr.status);
+                    reject(snippetI18n.serverError + ' ' + xhr.status);
                     return;
                 }
                 try {
                     var json = JSON.parse(xhr.responseText.trim());
                     if (!json || (!json.location && !json.url)) {
-                        reject(json.error || 'Nieprawidłowa odpowiedź JSON.');
+                        reject(json.error || snippetI18n.badJson);
                         return;
                     }
                     resolve(json.location || json.url);
                 } catch (err) {
-                    reject('Błąd parsowania odpowiedzi serwera.');
+                    reject(snippetI18n.parseError);
                 }
             };
 
-            xhr.onerror = function () { reject('Błąd sieciowy podczas wysyłania.'); };
+            xhr.onerror = function () { reject(snippetI18n.networkError); };
 
             var formData = new FormData();
             formData.append('file', blobInfo.blob(), blobInfo.filename());
@@ -336,15 +349,15 @@ function wp_simple_snippets_view() {
                         <span class="dashicons dashicons-shortcode" style="color:var(--wp-blue);"></span>
                         <span class="snippet-code-badge">&lt;?php get_snippet("nowy_snippet"); ?&gt;</span>
                     </div>
-                    <button type="button" class="button btn-remove-snippet" onclick="removeSnippetCard(this, '${newId}');">Usuń</button>
+                    <button type="button" class="button btn-remove-snippet" onclick="removeSnippetCard(this, '${newId}');">${snippetI18n.delete}</button>
                 </div>
                 <div class="snippet-body">
                     <p style="margin:0 0 10px 0;">
-                        <label style="display:block; font-weight:600; font-size:13px; margin-bottom:4px;">Identyfikator (tytuł):</label>
-                        <input type="text" name="snippetTitle[]" value="" required pattern="[a-zA-Z0-9_-]+" placeholder="np. baner_boczny" onkeyup="updateBadge(this);" style="width:100%; max-width:400px; padding:6px 10px; border: 1px solid var(--wp-input-border); border-radius:4px; font-family:monospace;">
+                        <label style="display:block; font-weight:600; font-size:13px; margin-bottom:4px;">${snippetI18n.id}</label>
+                        <input type="text" name="snippetTitle[]" value="" required pattern="[a-zA-Z0-9_-]+" placeholder="${snippetI18n.placeholder}" onkeyup="updateBadge(this);" style="width:100%; max-width:400px; padding:6px 10px; border: 1px solid var(--wp-input-border); border-radius:4px; font-family:monospace;">
                     </p>
                     <p style="margin:0;">
-                        <label style="display:block; font-weight:600; font-size:13px; margin-bottom:4px;">Treść snippetu:</label>
+                        <label style="display:block; font-weight:600; font-size:13px; margin-bottom:4px;">${snippetI18n.content}</label>
                         <textarea name="snippetContent[]" id="${newId}" style="width:100%; height:260px;"></textarea>
                     </p>
                 </div>
@@ -381,7 +394,7 @@ function wp_simple_snippets_view() {
                 if (navigator.clipboard) {
                     navigator.clipboard.writeText(code).then(function() {
                         const originalText = copyBtn.textContent;
-                        copyBtn.textContent = "Skopiowano!";
+                        copyBtn.textContent = snippetI18n.copied;
                         setTimeout(function() {
                             copyBtn.textContent = originalText;
                         }, 1800);
@@ -392,7 +405,7 @@ function wp_simple_snippets_view() {
     });
 
     function updateBadge(input) {
-        const val = input.value.trim() || 'identyfikator';
+        const val = input.value.trim() || snippetI18n.defaultId;
         const badge = input.closest('.snippet-card').querySelector('.snippet-code-badge');
         if (badge) {
             badge.textContent = '<?php get_snippet("' + val + '"); ?>';
@@ -400,7 +413,7 @@ function wp_simple_snippets_view() {
     }
 
     function removeSnippetCard(btn, editorId) {
-        if (confirm("Czy na pewno chcesz usunąć ten snippet?")) {
+        if (confirm(snippetI18n.deleteConfirm)) {
             if (currentActiveEditor === 'tinymce' && typeof tinymce !== 'undefined') {
                 var inst = tinymce.get(editorId);
                 if (inst) inst.remove();

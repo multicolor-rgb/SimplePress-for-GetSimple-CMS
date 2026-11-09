@@ -52,7 +52,7 @@ Main features:
 - WordPress-style top bar, collapsible dark sidebar, submenus and mobile menu.
 - Classic, Modern and Dark color schemes with per-user overrides.
 - WordPress-like postboxes, tabs, tables, forms, notices and login screen.
-- Custom SimplePress "Monogram Seal" logo.
+- Custom SimplePress "Aurora Monogram" logo.
 - Dashboard with statistics, quick draft and server health.
 - CKEditor (GetSimple core) or locally bundled TinyMCE 6.
 - Media library with drag & drop upload, thumbnails and local Cropper.js.
@@ -432,8 +432,11 @@ SimplePress includes:
 - Polish (`pl_PL`),
 - Spanish (`es_ES`).
 
-The language follows the GetSimple `$LANG` setting. Custom strings can be added
-to the files in `simplepress/lang/`.
+All admin UI strings, JavaScript labels, validation messages and confirm
+dialogs are translatable. The language follows the GetSimple `$LANG` setting.
+To add another language, copy `simplepress/lang/en_US.php` to
+`simplepress/lang/xx_XX.php`, translate the values and keep the same keys. The
+loader automatically falls back to English for missing keys.
 
 ## Updating
 

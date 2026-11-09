@@ -266,7 +266,7 @@
         var options = normalizeOptions(defArg(def, "options", []));
         var hasEmpty = options.some(function (opt) { return opt.value === ""; });
         if (!hasEmpty) {
-            select.appendChild(optionElement("", t("link_empty", "— brak —"), value));
+            select.appendChild(optionElement("", t("link_empty", "— none —"), value));
         }
         options.forEach(function (opt) {
             select.appendChild(optionElement(opt.value, opt.label, value));
@@ -279,7 +279,7 @@
 
     builders.page = function (wrap, def, value) {
         var select = el("select", "sp-cz-input");
-        select.appendChild(optionElement("", t("link_empty", "— brak —"), value));
+        select.appendChild(optionElement("", t("link_empty", "— none —"), value));
         state.pages.forEach(function (page) {
             if (page.private && !defArg(def, "include_private", false)) return;
             var prefix = new Array((page.level || 0) + 1).join("— ");
@@ -474,12 +474,12 @@
         var preview = el("div", "sp-cz-media-preview");
         var input = el("input", "sp-cz-input");
         input.type = "text";
-        input.placeholder = "URL pliku";
+        input.placeholder = t("file_url", "File URL");
         input.value = value || "";
         var actions = el("div", "sp-cz-media-actions");
-        var choose = el("button", "sp-cz-btn-small", t("choose", "Wybierz plik"));
+        var choose = el("button", "sp-cz-btn-small", t("choose", "Choose file"));
         choose.type = "button";
-        var clear = el("button", "sp-cz-btn-small sp-cz-btn-ghost", t("clear", "Wyczyść"));
+        var clear = el("button", "sp-cz-btn-small sp-cz-btn-ghost", t("clear", "Clear"));
         clear.type = "button";
 
         function updatePreview(next) {
@@ -544,7 +544,7 @@
     builders.gallery = function (wrap, def, value) {
         var list = parseList(value);
         var grid = el("div", "sp-cz-gallery");
-        var add = el("button", "sp-cz-btn-small", t("add_images", "Dodaj obrazy"));
+        var add = el("button", "sp-cz-btn-small", t("add_images", "Add images"));
         add.type = "button";
 
         function sync() {
@@ -554,7 +554,7 @@
         function renderGrid() {
             grid.innerHTML = "";
             if (!list.length) {
-                grid.appendChild(el("p", "sp-cz-gallery-empty", t("gallery_empty", "Brak obrazów. Dodaj pierwszy.")));
+                grid.appendChild(el("p", "sp-cz-gallery-empty", t("gallery_empty", "No images yet. Add your first one.")));
                 return;
             }
             list.forEach(function (url, index) {
@@ -564,7 +564,7 @@
                 img.alt = "";
                 var remove = el("button", "sp-cz-gallery-remove", "×");
                 remove.type = "button";
-                remove.title = t("remove", "Usuń");
+                remove.title = t("remove", "Remove");
                 remove.addEventListener("click", function () {
                     list.splice(index, 1);
                     renderGrid();
@@ -611,10 +611,10 @@
         var current = value === undefined || value === null ? "" : String(value);
         var options = [];
 
-        select.appendChild(optionElement("", t("link_empty", "— brak —"), current));
+        select.appendChild(optionElement("", t("link_empty", "— none —"), current));
         if (source !== "menu") {
             var pagesGroup = document.createElement("optgroup");
-            pagesGroup.label = t("pages_group", "Strony");
+            pagesGroup.label = t("pages_group", "Pages");
             state.pages.forEach(function (page) {
                 if (page.private && !includePrivate) return;
                 var prefix = new Array((page.level || 0) + 1).join("— ");
@@ -625,14 +625,14 @@
         }
         if (source !== "pages") {
             var menuGroup = document.createElement("optgroup");
-            menuGroup.label = t("menu_group", "Linki menu");
+            menuGroup.label = t("menu_group", "Menu links");
             state.menuLinks.forEach(function (link) {
                 options.push({ value: link.url, url: link.url });
                 menuGroup.appendChild(optionElement(link.url, link.name, current));
             });
             if (menuGroup.children.length) select.appendChild(menuGroup);
         }
-        select.appendChild(optionElement("__custom__", t("custom_url", "Własny URL…"), current));
+        select.appendChild(optionElement("__custom__", t("custom_url", "Custom URL…"), current));
 
         var matched = options.some(function (opt) {
             return sameUrl(opt.value, current) || sameUrl(opt.url, current);
@@ -691,13 +691,13 @@
         input.type = "text";
         input.value = value || "";
         input.placeholder = "dashicons-admin-generic";
-        var choose = el("button", "sp-cz-btn-small", t("choose_icon", "Wybierz ikonę"));
+        var choose = el("button", "sp-cz-btn-small", t("choose_icon", "Choose icon"));
         choose.type = "button";
         var panel = el("div", "sp-cz-icon-panel");
         panel.style.display = "none";
         var search = el("input", "sp-cz-input");
         search.type = "search";
-        search.placeholder = t("search_icons", "Szukaj ikony...");
+        search.placeholder = t("search_icons", "Search icons...");
         var grid = el("div", "sp-cz-icon-grid");
 
         function renderIcons(filter) {
@@ -720,7 +720,7 @@
                 grid.appendChild(button);
                 count++;
             });
-            if (!count) grid.appendChild(el("p", "sp-cz-gallery-empty", t("no_results", "Brak wyników.")));
+            if (!count) grid.appendChild(el("p", "sp-cz-gallery-empty", t("no_results", "No results.")));
         }
 
         input.addEventListener("input", function () {
@@ -1060,13 +1060,13 @@
             '  </div>' +
             '</div>';
 
-        modal.querySelector(".sp-cz-modal-title").textContent = t("media_title", "Wybierz lub wgraj medium");
-        modal.querySelector('[data-sp-cz-tab="library"]').textContent = t("library", "Biblioteka mediów");
-        modal.querySelector('[data-sp-cz-tab="upload"]').textContent = t("upload", "Wgraj plik");
-        modal.querySelector(".sp-cz-dropzone-title").textContent = t("upload", "Wgraj plik");
-        modal.querySelector(".sp-cz-dropzone-hint").textContent = t("upload_hint", "Upuść plik tutaj lub kliknij, aby wybrać z dysku.");
-        modal.querySelector('.sp-cz-modal-foot [data-sp-cz-close="1"]').textContent = t("cancel", "Anuluj");
-        modal.querySelector(".sp-cz-media-insert").textContent = t("insert", "Wstaw");
+        modal.querySelector(".sp-cz-modal-title").textContent = t("media_title", "Choose or upload media");
+        modal.querySelector('[data-sp-cz-tab="library"]').textContent = t("library", "Media library");
+        modal.querySelector('[data-sp-cz-tab="upload"]').textContent = t("upload", "Upload file");
+        modal.querySelector(".sp-cz-dropzone-title").textContent = t("upload", "Upload file");
+        modal.querySelector(".sp-cz-dropzone-hint").textContent = t("upload_hint", "Drop a file here or click to choose from disk.");
+        modal.querySelector('.sp-cz-modal-foot [data-sp-cz-close="1"]').textContent = t("cancel", "Cancel");
+        modal.querySelector(".sp-cz-media-insert").textContent = t("insert", "Insert");
 
         var refs = {
             list: modal.querySelector(".sp-cz-media-list"),
@@ -1131,7 +1131,7 @@
         mediaModal.refs.input.value = "";
         mediaModal.refs.input.accept = mediaState.kind === "image" ? "image/*" : "";
         mediaModal.refs.insert.disabled = true;
-        mediaModal.refs.insert.textContent = mediaState.multiple ? t("insert", "Wstaw") : t("insert", "Wstaw");
+        mediaModal.refs.insert.textContent = mediaState.multiple ? t("insert", "Insert") : t("insert", "Insert");
         mediaModal.el.classList.add("sp-cz-modal-open");
         mediaModal.el.setAttribute("aria-hidden", "false");
         switchMediaTab("library");
@@ -1154,12 +1154,12 @@
     function loadLibrary(autoSelectName) {
         if (!mediaModal || !mediaState) return;
         var refs = mediaModal.refs;
-        refs.list.innerHTML = '<p class="sp-cz-media-loading">' + t("loading", "Wczytywanie...") + '</p>';
+        refs.list.innerHTML = '<p class="sp-cz-media-loading">' + t("loading", "Loading...") + '</p>';
         request("media_list", { kind: mediaState.kind }, "GET").then(function (res) {
             refs.list.innerHTML = "";
             var files = res.files || [];
             if (!files.length) {
-                refs.list.appendChild(el("p", "sp-cz-media-empty", t("no_media", "Brak plików w bibliotece.")));
+                refs.list.appendChild(el("p", "sp-cz-media-empty", t("no_media", "No files in the library.")));
                 return;
             }
             files.forEach(function (file) {
@@ -1203,8 +1203,8 @@
             }
         }).catch(function (error) {
             refs.list.innerHTML = "";
-            refs.list.appendChild(el("p", "sp-cz-media-empty", t("media_error", "Nie udało się wczytać biblioteki.")));
-            showMediaError(error.message || t("media_error", "Nie udało się wczytać biblioteki."));
+            refs.list.appendChild(el("p", "sp-cz-media-empty", t("media_error", "Could not load the library.")));
+            showMediaError(error.message || t("media_error", "Could not load the library."));
         });
     }
 
@@ -1240,12 +1240,12 @@
                 mediaState.selected = [];
                 loadLibrary(res.file.name);
             } else {
-                showMediaError((res && res.message) || t("media_error", "Nie udało się wgrać pliku."));
+                showMediaError((res && res.message) || t("media_error", "Could not upload the file."));
             }
         };
         xhr.onerror = function () {
             refs.progress.style.display = "none";
-            showMediaError(t("media_error", "Nie udało się wgrać pliku."));
+            showMediaError(t("media_error", "Could not upload the file."));
         };
         xhr.send(form);
     }

@@ -88,10 +88,10 @@ if (!function_exists('wp_simple_settings_view')) {
             <div class="wrap">
                 <?php if (function_exists('wp_simple_render_subtabs')) { wp_simple_render_subtabs(); } ?>
                 
-                <h2 style="margin-bottom: 20px;">Ustawienia edytora treści</h2>
+                <h2 style="margin-bottom: 20px;"><?php echo sp_e(wp_i18n('SETTINGS_EDITOR_TITLE', 'Content editor settings')); ?></h2>
 
                 <?php if (isset($_GET['updated'])): ?>
-                    <div class="updated"><p>Ustawienia zostały pomyślnie zapisane.</p></div>
+                    <div class="updated"><p><?php echo sp_e(wp_i18n('SETTINGS_SAVED', 'Settings saved successfully.')); ?></p></div>
                 <?php endif; ?>
 
                 <form method="post" action="load.php?id=simplepress&amp;sub=settings">
@@ -100,34 +100,34 @@ if (!function_exists('wp_simple_settings_view')) {
                         <tbody>
                             <tr>
                                 <th scope="row" style="width: 220px; padding: 15px 10px; vertical-align: top; font-weight: 600; color: var(--wp-text-strong);">
-                                    Domyślny edytor treści
+                                    <?php echo sp_e(wp_i18n('SETTINGS_DEFAULT_EDITOR', 'Default content editor')); ?>
                                 </th>
                                 <td style="padding: 15px 10px;">
                                     <fieldset>
                                         <label style="display: block; margin-bottom: 12px; cursor: pointer;">
                                             <input type="radio" name="active_editor" value="ckeditor" <?php echo ($active_editor === 'ckeditor') ? 'checked' : ''; ?> style="margin-right: 8px;">
-                                            <strong>CKEditor</strong> <span style="color: var(--wp-text-muted);">(Domyślny edytor GetSimple CMS)</span>
+                                            <strong>CKEditor</strong> <span style="color: var(--wp-text-muted);"><?php echo sp_e(wp_i18n('SETTINGS_CKEDITOR_DEFAULT', '(Default GetSimple CMS editor)')); ?></span>
                                         </label>
                                         <label style="display: block; margin-bottom: 12px; cursor: pointer;">
                                             <input type="radio" name="active_editor" value="tinymce" <?php echo ($active_editor === 'tinymce') ? 'checked' : ''; ?> style="margin-right: 8px;">
-                                            <strong>TinyMCE</strong> <span style="color: var(--wp-text-muted);">(Standard znany z klasycznego WordPressa)</span>
+                                            <strong>TinyMCE</strong> <span style="color: var(--wp-text-muted);"><?php echo sp_e(wp_i18n('SETTINGS_TINYMCE_WORDPRESS', '(Classic WordPress-style editor)')); ?></span>
                                         </label>
                                     </fieldset>
                                 </td>
                             </tr>
                             <tr id="tinymce-options" style="<?php echo ($active_editor === 'tinymce') ? '' : 'display:none;'; ?>">
                                 <th scope="row" style="width: 220px; padding: 15px 10px; vertical-align: top; font-weight: 600; color: var(--wp-text-strong);">
-                                    Pasek narzędzi TinyMCE
+                                    <?php echo sp_e(wp_i18n('SETTINGS_TINYMCE_TOOLBAR', 'TinyMCE toolbar')); ?>
                                 </th>
                                 <td style="padding: 15px 10px;">
                                     <textarea name="tinymce_toolbar" rows="3" style="width: 100%; font-family: monospace; font-size: 12px; padding: 8px; border: 1px solid var(--wp-input-border); border-radius: 4px; box-sizing: border-box;"><?php echo htmlspecialchars($tinymce_toolbar); ?></textarea>
                                     <p class="description" style="color: var(--wp-text-muted); font-size: 12px; margin: 6px 0 0 0;">
-                                        Wpisz przyciski oddzielone spacjami. Znak <code>|</code> tworzy pionowy separator grup.
+                                        <?php echo sp_e(wp_i18n('SETTINGS_TOOLBAR_HINT', 'Enter buttons separated by spaces. The | character creates a vertical group separator.')); ?>
                                     </p>
                                     <p style="margin-top: 8px; font-size: 12px;">
-                                        <strong>Presety paska:</strong><br>
-                                        <a href="#" class="wp-preset-link" data-preset="undo redo | bold italic underline | bullist numlist | link unlink | removeformat">Minimalistyczny</a> | 
-                                        <a href="#" class="wp-preset-link" data-preset="undo redo | blocks | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | code fullscreen">Pełny (Domyślny)</a>
+                                        <strong><?php echo sp_e(wp_i18n('SETTINGS_PRESETS', 'Toolbar presets:')); ?></strong><br>
+                                        <a href="#" class="wp-preset-link" data-preset="undo redo | bold italic underline | bullist numlist | link unlink | removeformat"><?php echo sp_e(wp_i18n('SETTINGS_PRESET_MINIMAL', 'Minimal')); ?></a> | 
+                                        <a href="#" class="wp-preset-link" data-preset="undo redo | blocks | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media table | code fullscreen"><?php echo sp_e(wp_i18n('SETTINGS_PRESET_FULL', 'Full (default)')); ?></a>
                                     </p>
                                 </td>
                             </tr>
@@ -135,7 +135,7 @@ if (!function_exists('wp_simple_settings_view')) {
                     </table>
 
                     <p class="submit" style="margin-top: 20px;">
-                        <input type="submit" name="wp_save_settings" class="button button-primary" value="Zapisz zmiany">
+                        <input type="submit" name="wp_save_settings" class="button button-primary" value="<?php echo sp_e(wp_i18n('SETTINGS_SAVE', 'Save changes')); ?>">
                     </p>
                 </form>
             </div>
@@ -183,37 +183,37 @@ if (!function_exists('wp_simple_tinymce_upload_handler')) {
 
             if (!isset($_FILES['file']) || empty($_FILES['file']['tmp_name'])) {
                 http_response_code(400);
-                echo json_encode(['error' => 'Brak pliku do wgrania.']);
+                echo json_encode(['error' => wp_i18n('SETTINGS_UPLOAD_NO_FILE', 'No file to upload.')]);
                 exit;
             }
 
             $file = $_FILES['file'];
             if ($file['error'] !== UPLOAD_ERR_OK) {
                 http_response_code(500);
-                echo json_encode(['error' => 'Kod błędu PHP uploadu: ' . $file['error']]);
+                echo json_encode(['error' => sprintf(wp_i18n('SETTINGS_UPLOAD_PHP_ERROR', 'PHP upload error code: %s'), $file['error'])]);
                 exit;
             }
 
             if (!sp_is_authenticated()) {
                 http_response_code(403);
-                echo json_encode(['error' => 'Brak uprawnień.']);
+                echo json_encode(['error' => wp_i18n('SETTINGS_UPLOAD_FORBIDDEN', 'Permission denied.')]);
                 exit;
             }
             if (!sp_verify_nonce('editor_upload', $_POST['sp_nonce'] ?? '')) {
                 http_response_code(403);
-                echo json_encode(['error' => 'Nieprawidłowy token bezpieczeństwa.']);
+                echo json_encode(['error' => wp_i18n('SETTINGS_UPLOAD_BAD_NONCE', 'Invalid security token.')]);
                 exit;
             }
             if ($file['size'] > 5 * 1024 * 1024) {
                 http_response_code(400);
-                echo json_encode(['error' => 'Plik jest zbyt duży (limit 5 MB).']);
+                echo json_encode(['error' => wp_i18n('SETTINGS_UPLOAD_TOO_LARGE', 'File is too large (5 MB limit).')]);
                 exit;
             }
             $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
             if (!in_array($ext, $allowed, true) || !@getimagesize($file['tmp_name'])) {
                 http_response_code(400);
-                echo json_encode(['error' => 'Dozwolone są tylko obrazy JPG, PNG, GIF i WebP.']);
+                echo json_encode(['error' => wp_i18n('SETTINGS_UPLOAD_BAD_TYPE', 'Only JPG, PNG, GIF and WebP images are allowed.')]);
                 exit;
             }
 
@@ -228,7 +228,7 @@ if (!function_exists('wp_simple_tinymce_upload_handler')) {
             if (!is_dir($upload_dir)) {
                 if (!@mkdir($upload_dir, 0755, true)) {
                     http_response_code(500);
-                    echo json_encode(['error' => 'Katalog data/uploads/ nie istnieje i nie można go utworzyć (brak uprawnień).']);
+                    echo json_encode(['error' => wp_i18n('SETTINGS_UPLOAD_NO_DIR', 'The data/uploads/ directory does not exist and cannot be created (permission denied).')]);
                     exit;
                 }
             }
@@ -237,7 +237,7 @@ if (!function_exists('wp_simple_tinymce_upload_handler')) {
             $target_file = $upload_dir . $final_name;
             if (!sp_path_within(dirname($target_file), $upload_dir, true)) {
                 http_response_code(400);
-                echo json_encode(['error' => 'Nieprawidłowa nazwa pliku.']);
+                echo json_encode(['error' => wp_i18n('SETTINGS_UPLOAD_BAD_NAME', 'Invalid file name.')]);
                 exit;
             }
 
@@ -254,7 +254,7 @@ if (!function_exists('wp_simple_tinymce_upload_handler')) {
                 echo json_encode(['location' => $public_url]);
             } else {
                 http_response_code(500);
-                echo json_encode(['error' => 'Błąd zapisu pliku na serwerze. Sprawdź prawa do folderu data/uploads.']);
+                echo json_encode(['error' => wp_i18n('SETTINGS_UPLOAD_WRITE_ERROR', 'Error saving the file on the server. Check permissions for data/uploads.')]);
             }
             exit;
         }
@@ -390,23 +390,23 @@ if (!function_exists('wp_simple_tinymce_footer_init')) {
 
                                 xhr.onload = function () {
                                     if (xhr.status < 200 || xhr.status >= 300) {
-                                        reject('Błąd serwera: ' + xhr.status);
+                                        reject(<?php echo sp_js(wp_i18n('SETTINGS_UPLOAD_SERVER_ERROR', 'Server error: ')); ?> + xhr.status);
                                         return;
                                     }
                                     try {
                                         var json = JSON.parse(xhr.responseText.trim());
                                         if (!json || typeof json.location !== 'string') {
-                                            reject(json.error || 'Nieprawidłowa odpowiedź JSON.');
+                                            reject(json.error || <?php echo sp_js(wp_i18n('SETTINGS_UPLOAD_BAD_JSON', 'Invalid JSON response.')); ?>);
                                             return;
                                         }
                                         resolve(json.location);
                                     } catch (err) {
-                                        reject('Błąd parsowania JSON.');
+                                        reject(<?php echo sp_js(wp_i18n('SETTINGS_UPLOAD_PARSE_JSON', 'Error parsing JSON.')); ?>);
                                     }
                                 };
 
                                 xhr.onerror = function () {
-                                    reject('Błąd sieciowy podczas uploadu.');
+                                    reject(<?php echo sp_js(wp_i18n('SETTINGS_UPLOAD_NETWORK', 'Network error during upload.')); ?>);
                                 };
 
                                 var formData = new FormData();
